@@ -40,10 +40,10 @@ This document tracks the tasks for the CTMS project. Every functional requiremen
 - [x] **TASK-5.4**: Add error handling to gracefully return null/0.00 for edge cases without 500 errors. (F4.3)
 
 ## Phase 6: Transcript Generation & Frontend UI (PRD 4.5 & 5.3)
-- [ ] **TASK-6.1**: **TDD** - Write integration tests for API fetching aggregated student history (AcademicSession -> Semester). (F5.1)
-- [ ] **TASK-6.2**: Build high-density data tables in Next.js using Tailwind and Radix UI/shadcn. (NFR3.1)
-- [ ] **TASK-6.3**: Implement frontend caching (Next.js `revalidate` tags) for static institutional data. (NFR2.3)
-- [ ] **TASK-6.4**: Develop the print-ready CSS (`@media print`) layout for digital transcripts. (F5.2)
+- [x] **TASK-6.1**: **TDD** - Write integration tests for API fetching aggregated student history (AcademicSession -> Semester). (F5.1)
+- [x] **TASK-6.2**: Build high-density data tables in Next.js using Tailwind and Radix UI/shadcn. (NFR3.1)
+- [x] **TASK-6.3**: Implement frontend caching (Next.js `revalidate` tags) for static institutional data. (NFR2.3)
+- [x] **TASK-6.4**: Develop the print-ready CSS (`@media print`) layout for digital transcripts. (F5.2)
 
 ## Phase 7: Optimization & Error Handling (PRD 5.2 & 5.3)
 - [ ] **TASK-7.1**: Configure Prisma connection pooling and add DB indexes (`StudentID`, `CourseID`, `Status`). (NFR2.1, NFR2.2)

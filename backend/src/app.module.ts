@@ -8,6 +8,7 @@ import { IngestionModule } from './ingestion/ingestion.module';
 import { AuditModule } from './audit/audit.module';
 import { GradeModule } from './grade/grade.module';
 import { GpaModule } from './gpa/gpa.module';
+import { TranscriptModule } from './transcript/transcript.module';
 import { throttlerConfig } from './config/throttler.config';
 
 @Module({
@@ -20,6 +21,7 @@ import { throttlerConfig } from './config/throttler.config';
     AuditModule,
     GradeModule,
     GpaModule,
+    TranscriptModule,
   ],
   controllers: [AppController],
   providers: [AppService],
