@@ -12,11 +12,11 @@ This document tracks the tasks for the CTMS project. Every functional requiremen
 - [x] **TASK-1.4**: Write automated database migration scripts and seed data for initial testing.
 
 ## Phase 2: Authentication & Authorization (PRD 4.1)
-- [ ] **TASK-2.1**: **TDD** - Create tests for User creation, password hashing (Argon2/bcrypt), and login route.
-- [ ] **TASK-2.2**: Implement short-lived JWT Access Tokens and Refresh Tokens. Set secure HTTP-only cookies. (F1.1, F1.2)
-- [ ] **TASK-2.3**: **TDD** - Write tests for NestJS Guards verifying array-based roles and `DepartmentID` payload claims against resources.
-- [ ] **TASK-2.4**: Implement RBAC and Tenant-Scoped Guards in NestJS. (F1.3)
-- [ ] **TASK-2.5**: Set up Next.js Middleware to intercept and redirect unauthenticated client-side navigation.
+- [x] **TASK-2.1**: **TDD** - Create tests for User creation, password hashing (Argon2/bcrypt), and login route.
+- [x] **TASK-2.2**: Implement short-lived JWT Access Tokens and Refresh Tokens. Set secure HTTP-only cookies. (F1.1, F1.2)
+- [x] **TASK-2.3**: **TDD** - Write tests for NestJS Guards verifying array-based roles and `DepartmentID` payload claims against resources.
+- [x] **TASK-2.4**: Implement RBAC and Tenant-Scoped Guards in NestJS. (F1.3)
+- [x] **TASK-2.5**: Set up Next.js Middleware to intercept and redirect unauthenticated client-side navigation.
 
 ## Phase 3: Data Ingestion & Validation (PRD 4.2 & 5.1)
 - [ ] **TASK-3.1**: **TDD** - Write validation tests (valid/invalid data, partial success) for CSV payloads using Zod/class-validator.
