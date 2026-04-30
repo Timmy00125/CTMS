@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  Admin
+  Lecturer
+  ExamOfficer
+}
+
+enum GradeStatus {
+  DRAFT
+  PENDING_APPROVAL
+  PUBLISHED
+}
+
+model User {
+  id             String           @id @default(uuid())
+  email          String           @unique
+  passwordHash   String
+  name           String
+  roles          Role[]
+  departmentId   String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  
+  systemLogs     SystemAuditLog[]
+  gradeAuditLogs GradeAuditLog[]
+  courses        Course[]
+}
+
+model Student {
+  id             String    @id @default(uuid())
+  matriculationNo String   @unique
+  name           String
+  departmentId   String
+  level          Int       @default(100)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  grades         Grade[]
+}
+
+model Course {
+  id             String    @id @default(uuid())
+  code           String    @unique
+  title          String
+  creditUnits    Int
+  departmentId   String
+  lecturerId     String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  lecturer       User?     @relation(fields: [lecturerId], references: [id])
+  grades         Grade[]
+}
+
+model AcademicSession {
+  id             String     @id @default(uuid())
+  name           String     @unique // e.g., 2023/2024
+  startDate      DateTime
+  endDate        DateTime
+  isActive       Boolean    @default(false)
+  
+  semesters      Semester[]
+}
+
+model Semester {
+  id                String          @id @default(uuid())
+  name              String          // e.g., First Semester, Second Semester
+  academicSessionId String
+  isActive          Boolean         @default(false)
+
+  academicSession   AcademicSession @relation(fields: [academicSessionId], references: [id])
+  grades            Grade[]
+}
+
+model Grade {
+  id             String       @id @default(uuid())
+  studentId      String
+  courseId       String
+  semesterId     String
+  score          Int
+  gradeLetter    String?
+  gradePoints    Float?
+  status         GradeStatus  @default(DRAFT)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  student        Student      @relation(fields: [studentId], references: [id])
+  course         Course       @relation(fields: [courseId], references: [id])
+  semester       Semester     @relation(fields: [semesterId], references: [id])
+  auditLogs      GradeAuditLog[]
+
+  @@unique([studentId, courseId, semesterId])
+}
+
+model GradeAuditLog {
+  id             String   @id @default(uuid())
+  gradeId        String
+  userId         String
+  oldScore       Int?
+  newScore       Int
+  reason         String?
+  timestamp      DateTime @default(now())
+
+  grade          Grade    @relation(fields: [gradeId], references: [id])
+  user           User     @relation(fields: [userId], references: [id])
+}
+
+model SystemAuditLog {
+  id             String   @id @default(uuid())
+  userId         String
+  action         String
+  resource       String
+  details        String?
+  timestamp      DateTime @default(now())
+
+  user           User     @relation(fields: [userId], references: [id])
+}

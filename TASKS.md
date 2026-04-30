@@ -6,10 +6,10 @@ This document tracks the tasks for the CTMS project. Every functional requiremen
 3. **Refactor**: Clean up the code while ensuring tests still pass.
 
 ## Phase 1: Infrastructure & Database Setup
-- [ ] **TASK-1.1**: Initialize Next.js (App Router) frontend and NestJS backend repositories.
-- [ ] **TASK-1.2**: Set up PostgreSQL and Prisma ORM in the NestJS backend.
-- [ ] **TASK-1.3**: Design Prisma schema models (`User`, `Student`, `Course`, `Grade`, `GradeAuditLog`, `SystemAuditLog`, `AcademicSession`, `Semester`). Include `DepartmentID`, a `roles` array (Admin, Lecturer, ExamOfficer), and Grade `Status` enum. (Relates to: PRD Sec 2 & 5.1).
-- [ ] **TASK-1.4**: Write automated database migration scripts and seed data for initial testing.
+- [x] **TASK-1.1**: Initialize Next.js (App Router) frontend and NestJS backend repositories.
+- [x] **TASK-1.2**: Set up PostgreSQL and Prisma ORM in the NestJS backend.
+- [x] **TASK-1.3**: Design Prisma schema models (`User`, `Student`, `Course`, `Grade`, `GradeAuditLog`, `SystemAuditLog`, `AcademicSession`, `Semester`). Include `DepartmentID`, a `roles` array (Admin, Lecturer, ExamOfficer), and Grade `Status` enum. (Relates to: PRD Sec 2 - [ ] **TASK-1.3**: Design Prisma schema models (`User`, `Student`, `Course`, `Grade`, `GradeAuditLog`, `SystemAuditLog`, `AcademicSession`, `Semester`). Include `DepartmentID`, a `roles` array (Admin, Lecturer, ExamOfficer), and Grade `Status` enum. (Relates to: PRD Sec 2 & 5.1). 5.1).
+- [x] **TASK-1.4**: Write automated database migration scripts and seed data for initial testing.
 
 ## Phase 2: Authentication & Authorization (PRD 4.1)
 - [ ] **TASK-2.1**: **TDD** - Create tests for User creation, password hashing (Argon2/bcrypt), and login route.
