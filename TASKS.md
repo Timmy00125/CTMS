@@ -19,11 +19,11 @@ This document tracks the tasks for the CTMS project. Every functional requiremen
 - [x] **TASK-2.5**: Set up Next.js Middleware to intercept and redirect unauthenticated client-side navigation.
 
 ## Phase 3: Data Ingestion & Validation (PRD 4.2 & 5.1)
-- [ ] **TASK-3.1**: **TDD** - Write validation tests (valid/invalid data, partial success) for CSV payloads using Zod/class-validator.
-- [ ] **TASK-3.2**: Implement bulk upload endpoint for Students and Courses. (F2.1, F2.2)
-- [ ] **TASK-3.3**: **TDD** - Write tests for input sanitization (SQLi, XSS) and System Audit Logging.
-- [ ] **TASK-3.4**: Implement `SystemAuditLog` tracking for Admin actions (role changes, course assignments). (F2.3)
-- [ ] **TASK-3.5**: Integrate `@nestjs/throttler` for rate limiting. (NFR1.1)
+- [x] **TASK-3.1**: **TDD** - Write validation tests (valid/invalid data, partial success) for CSV payloads using Zod/class-validator.
+- [x] **TASK-3.2**: Implement bulk upload endpoint for Students and Courses. (F2.1, F2.2)
+- [x] **TASK-3.3**: **TDD** - Write tests for input sanitization (SQLi, XSS) and System Audit Logging.
+- [x] **TASK-3.4**: Implement `SystemAuditLog` tracking for Admin actions (role changes, course assignments). (F2.3)
+- [x] **TASK-3.5**: Integrate `@nestjs/throttler` for rate limiting. (NFR1.1)
 
 ## Phase 4: Grade Management & Auditing (PRD 4.3)
 - [ ] **TASK-4.1**: **TDD** - Write tests asserting raw scores are ints (0-100) and mapped to GradeLetters/Points. Ensure default status is `DRAFT`.
