@@ -9,7 +9,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthService, AuthLoginResult } from './auth.service';
-import { Response, Request } from 'express';
+import type { Response, Request } from 'express';
 
 export class LoginDto {
   email!: string;

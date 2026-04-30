@@ -1,4 +1,4 @@
-import { RolesGuard } from './roles.guard';
+import { RolesGuard } from './roles.guard.js';
 import { Reflector } from '@nestjs/core';
 import { ExecutionContext } from '@nestjs/common';
 import { Role } from '@prisma/client';

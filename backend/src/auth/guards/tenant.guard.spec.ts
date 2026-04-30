@@ -1,4 +1,4 @@
-import { TenantGuard } from './tenant.guard';
+import { TenantGuard } from './tenant.guard.js';
 import { ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { TokenPayload } from '../auth.service';
