@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -43,6 +44,8 @@ model Student {
   updatedAt      DateTime  @updatedAt
 
   grades         Grade[]
+
+  @@index([departmentId])
 }
 
 model Course {
@@ -57,6 +60,9 @@ model Course {
 
   lecturer       User?     @relation(fields: [lecturerId], references: [id])
   grades         Grade[]
+
+  @@index([departmentId])
+  @@index([lecturerId])
 }
 
 model AcademicSession {
@@ -77,6 +83,8 @@ model Semester {
 
   academicSession   AcademicSession @relation(fields: [academicSessionId], references: [id])
   grades            Grade[]
+
+  @@index([academicSessionId])
 }
 
 model Grade {
@@ -97,6 +105,11 @@ model Grade {
   auditLogs      GradeAuditLog[]
 
   @@unique([studentId, courseId, semesterId])
+  @@index([studentId])
+  @@index([courseId])
+  @@index([status])
+  @@index([semesterId])
+  @@index([studentId, status])
 }
 
 model GradeAuditLog {
@@ -110,6 +123,10 @@ model GradeAuditLog {
 
   grade          Grade    @relation(fields: [gradeId], references: [id])
   user           User     @relation(fields: [userId], references: [id])
+
+  @@index([gradeId])
+  @@index([userId])
+  @@index([timestamp])
 }
 
 model SystemAuditLog {
@@ -121,4 +138,8 @@ model SystemAuditLog {
   timestamp      DateTime @default(now())
 
   user           User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+  @@index([timestamp])
 }

@@ -46,6 +46,6 @@ This document tracks the tasks for the CTMS project. Every functional requiremen
 - [x] **TASK-6.4**: Develop the print-ready CSS (`@media print`) layout for digital transcripts. (F5.2)
 
 ## Phase 7: Optimization & Error Handling (PRD 5.2 & 5.3)
-- [ ] **TASK-7.1**: Configure Prisma connection pooling and add DB indexes (`StudentID`, `CourseID`, `Status`). (NFR2.1, NFR2.2)
-- [ ] **TASK-7.2**: Standardize API error envelopes globally via a NestJS Exception Filter. (NFR3.2)
-- [ ] **TASK-7.3**: Conduct final E2E testing encompassing the entire workflow.
+- [x] **TASK-7.1**: Configure Prisma connection pooling and add DB indexes (`StudentID`, `CourseID`, `Status`). (NFR2.1, NFR2.2)
+- [x] **TASK-7.2**: Standardize API error envelopes globally via a NestJS Exception Filter. (NFR3.2)
+- [x] **TASK-7.3**: Conduct final E2E testing encompassing the entire workflow.
