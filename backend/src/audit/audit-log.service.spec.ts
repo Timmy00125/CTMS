@@ -139,6 +139,69 @@ describe('AuditLogService', () => {
     });
   });
 
+  describe('logGradeSubmission', () => {
+    it('should log grade submission', async () => {
+      mockPrismaService.systemAuditLog.create.mockResolvedValue({});
+
+      await service.logGradeSubmission(
+        'lecturer-1',
+        'grade-1',
+        'student-1',
+        'course-1',
+      );
+
+      expect(mockPrismaService.systemAuditLog.create).toHaveBeenCalledWith({
+        data: {
+          userId: 'lecturer-1',
+          action: 'GRADE_SUBMISSION',
+          resource: 'Grade',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          details: expect.stringContaining('grade-1'),
+        },
+      });
+    });
+  });
+
+  describe('logGradePublication', () => {
+    it('should log grade publication', async () => {
+      mockPrismaService.systemAuditLog.create.mockResolvedValue({});
+
+      await service.logGradePublication(
+        'exam-officer-1',
+        'course-1',
+        'semester-1',
+        10,
+      );
+
+      expect(mockPrismaService.systemAuditLog.create).toHaveBeenCalledWith({
+        data: {
+          userId: 'exam-officer-1',
+          action: 'GRADE_PUBLICATION',
+          resource: 'Grade',
+          details:
+            'Published 10 grades for course course-1, semester semester-1',
+        },
+      });
+    });
+  });
+
+  describe('logGradeAmendment', () => {
+    it('should log grade amendment', async () => {
+      mockPrismaService.systemAuditLog.create.mockResolvedValue({});
+
+      await service.logGradeAmendment('lecturer-1', 'grade-1', 75, 80);
+
+      expect(mockPrismaService.systemAuditLog.create).toHaveBeenCalledWith({
+        data: {
+          userId: 'lecturer-1',
+          action: 'GRADE_AMENDMENT',
+          resource: 'Grade',
+          details: 'Amended grade grade-1: score 75 -> 80',
+        },
+      });
+    });
+  });
+
   describe('getLogsForUser', () => {
     it('should return logs for a specific user', async () => {
       const mockLogs = [

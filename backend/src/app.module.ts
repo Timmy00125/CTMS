@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { IngestionModule } from './ingestion/ingestion.module';
 import { AuditModule } from './audit/audit.module';
+import { GradeModule } from './grade/grade.module';
 import { throttlerConfig } from './config/throttler.config';
 
 @Module({
@@ -16,6 +17,7 @@ import { throttlerConfig } from './config/throttler.config';
     AuthModule,
     IngestionModule,
     AuditModule,
+    GradeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

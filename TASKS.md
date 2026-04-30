@@ -26,12 +26,12 @@ This document tracks the tasks for the CTMS project. Every functional requiremen
 - [x] **TASK-3.5**: Integrate `@nestjs/throttler` for rate limiting. (NFR1.1)
 
 ## Phase 4: Grade Management & Auditing (PRD 4.3)
-- [ ] **TASK-4.1**: **TDD** - Write tests asserting raw scores are ints (0-100) and mapped to GradeLetters/Points. Ensure default status is `DRAFT`.
-- [ ] **TASK-4.2**: Implement the grade submission endpoint and mapping service. (F3.1, F3.2, F3.3)
-- [ ] **TASK-4.3**: **TDD** - Write tests simulating an Exam Officer transitioning grades to `PUBLISHED`.
-- [ ] **TASK-4.4**: **TDD** - Write tests simulating an Admin triggering an `AmendmentWindow` and Lecturer updating a grade, validating the `GradeAuditLog`.
-- [ ] **TASK-4.5**: Implement the Amendment workflow and automated `GradeAuditLog` writes. (F3.4, F3.5)
-- [ ] **TASK-4.6**: **TDD** - Write tests explicitly verifying Students cannot fetch `DRAFT` or `PENDING_APPROVAL` grades.
+- [x] **TASK-4.1**: **TDD** - Write tests asserting raw scores are ints (0-100) and mapped to GradeLetters/Points. Ensure default status is `DRAFT`.
+- [x] **TASK-4.2**: Implement the grade submission endpoint and mapping service. (F3.1, F3.2, F3.3)
+- [x] **TASK-4.3**: **TDD** - Write tests simulating an Exam Officer transitioning grades to `PUBLISHED`.
+- [x] **TASK-4.4**: **TDD** - Write tests simulating an Admin triggering an `AmendmentWindow` and Lecturer updating a grade, validating the `GradeAuditLog`.
+- [x] **TASK-4.5**: Implement the Amendment workflow and automated `GradeAuditLog` writes. (F3.4, F3.5)
+- [x] **TASK-4.6**: **TDD** - Write tests explicitly verifying Students cannot fetch `DRAFT` or `PENDING_APPROVAL` grades.
 
 ## Phase 5: The Computational Engine (PRD 4.4)
 - [ ] **TASK-5.1**: **TDD** - Write extensive unit tests for GPA/CGPA calculations, including edge cases (division by zero, no exams taken).

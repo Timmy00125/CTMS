@@ -82,6 +82,48 @@ export class AuditLogService {
     );
   }
 
+  async logGradeSubmission(
+    userId: string,
+    gradeId: string,
+    studentId: string,
+    courseId: string,
+  ) {
+    return this.log(
+      userId,
+      AuditAction.GRADE_SUBMISSION,
+      AuditResource.Grade,
+      `Submitted grade ${gradeId} for student ${studentId} in course ${courseId}`,
+    );
+  }
+
+  async logGradePublication(
+    userId: string,
+    courseId: string,
+    semesterId: string,
+    count: number,
+  ) {
+    return this.log(
+      userId,
+      AuditAction.GRADE_PUBLICATION,
+      AuditResource.Grade,
+      `Published ${count} grades for course ${courseId}, semester ${semesterId}`,
+    );
+  }
+
+  async logGradeAmendment(
+    userId: string,
+    gradeId: string,
+    oldScore: number,
+    newScore: number,
+  ) {
+    return this.log(
+      userId,
+      AuditAction.GRADE_AMENDMENT,
+      AuditResource.Grade,
+      `Amended grade ${gradeId}: score ${oldScore} -> ${newScore}`,
+    );
+  }
+
   async getLogsForUser(userId: string) {
     return this.prisma.systemAuditLog.findMany({
       where: { userId },
