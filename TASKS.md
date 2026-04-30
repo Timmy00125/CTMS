@@ -34,10 +34,10 @@ This document tracks the tasks for the CTMS project. Every functional requiremen
 - [x] **TASK-4.6**: **TDD** - Write tests explicitly verifying Students cannot fetch `DRAFT` or `PENDING_APPROVAL` grades.
 
 ## Phase 5: The Computational Engine (PRD 4.4)
-- [ ] **TASK-5.1**: **TDD** - Write extensive unit tests for GPA/CGPA calculations, including edge cases (division by zero, no exams taken).
-- [ ] **TASK-5.2**: Implement the mathematical GPA/CGPA computation service in NestJS. (F4.1, F4.2)
-- [ ] **TASK-5.3**: Implement the Examination Officer trigger endpoint to execute batch calculations only on `PUBLISHED` grades. (F4.2)
-- [ ] **TASK-5.4**: Add error handling to gracefully return null/0.00 for edge cases without 500 errors. (F4.3)
+- [x] **TASK-5.1**: **TDD** - Write extensive unit tests for GPA/CGPA calculations, including edge cases (division by zero, no exams taken).
+- [x] **TASK-5.2**: Implement the mathematical GPA/CGPA computation service in NestJS. (F4.1, F4.2)
+- [x] **TASK-5.3**: Implement the Examination Officer trigger endpoint to execute batch calculations only on `PUBLISHED` grades. (F4.2)
+- [x] **TASK-5.4**: Add error handling to gracefully return null/0.00 for edge cases without 500 errors. (F4.3)
 
 ## Phase 6: Transcript Generation & Frontend UI (PRD 4.5 & 5.3)
 - [ ] **TASK-6.1**: **TDD** - Write integration tests for API fetching aggregated student history (AcademicSession -> Semester). (F5.1)
