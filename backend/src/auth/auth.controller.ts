@@ -10,10 +10,27 @@ import {
 } from '@nestjs/common';
 import { AuthService, AuthLoginResult } from './auth.service';
 import type { Response, Request } from 'express';
-import type { CreateUserDto } from '../user/user.service';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
+export class RegisterDto {
+  @IsEmail()
+  email!: string;
+
+  @IsString()
+  @MinLength(6)
+  password!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+}
 
 export class LoginDto {
+  @IsEmail()
   email!: string;
+
+  @IsString()
+  @IsNotEmpty()
   password!: string;
 }
 
@@ -23,8 +40,11 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() body: CreateUserDto) {
-    return this.authService.register(body);
+  async register(@Body() body: RegisterDto) {
+    const user = await this.authService.register(body);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordHash, ...result } = user;
+    return result;
   }
 
   @Post('login')

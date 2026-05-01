@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
@@ -8,6 +9,15 @@ async function bootstrap() {
 
   // Enable cookie parser for JWT tokens
   app.use(cookieParser());
+
+  // Register global validation pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   // Register global exception filter for standardized error responses
   app.useGlobalFilters(new GlobalExceptionFilter());
