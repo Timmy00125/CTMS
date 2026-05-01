@@ -1,4 +1,4 @@
-import { PrismaClient, GradeStatus } from '@prisma/client';
+import { PrismaClient, GradeStatus, Course } from '@prisma/client';
 import * as argon2 from 'argon2';
 
 const prisma = new PrismaClient();
@@ -290,7 +290,7 @@ async function main() {
   // ═══════════════════════════════════════════════════════════════════════════
   console.log('📚 Creating Courses...');
 
-  const courses = [];
+  const courses: Course[] = [];
   for (const cd of coursesData) {
     // Assign lecturer based on department
     let lecturerId: string | null = null;
