@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthService, AuthLoginResult } from './auth.service';
 import type { Response, Request } from 'express';
+import { CreateUserDto } from '../user/user.service';
 
 export class LoginDto {
   email!: string;
@@ -19,6 +20,12 @@ export class LoginDto {
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  async register(@Body() body: CreateUserDto) {
+    return this.authService.register(body);
+  }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)

@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { UserService, CreateUserDto } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { User, Role } from '@prisma/client';
@@ -22,6 +22,10 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
+
+  async register(data: CreateUserDto): Promise<User> {
+    return this.userService.createUser(data);
+  }
 
   async validateUser(
     email: string,
