@@ -4,9 +4,16 @@ import type { NextRequest } from 'next/server';
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip proxy for API routes, static files, and Next.js internals
+  // Skip proxy for API routes, backend routes, static files, and Next.js internals
   if (
     pathname.startsWith('/api') ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/transcript') ||
+    pathname.startsWith('/academic-sessions') ||
+    pathname.startsWith('/students') ||
+    pathname.startsWith('/grades') ||
+    pathname.startsWith('/gpa') ||
+    pathname.startsWith('/ingestion') ||
     pathname.startsWith('/_next') ||
     pathname === '/favicon.ico' ||
     pathname === '/sitemap.xml' ||

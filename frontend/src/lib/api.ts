@@ -1,14 +1,12 @@
 import { TranscriptData } from '@/types/transcript';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
 export async function fetchStudentTranscript(
   studentId: string,
 ): Promise<TranscriptData> {
-  const response = await fetch(`${API_BASE_URL}/transcript/${studentId}`, {
+  const response = await fetch(`/transcript/${studentId}`, {
     credentials: 'include',
     next: {
-      revalidate: 3600, // Cache for 1 hour
+      revalidate: 3600,
       tags: [`transcript-${studentId}`],
     },
   });
@@ -24,10 +22,10 @@ export async function fetchStudentTranscript(
 }
 
 export async function fetchAcademicSessions() {
-  const response = await fetch(`${API_BASE_URL}/academic-sessions`, {
+  const response = await fetch('/academic-sessions', {
     credentials: 'include',
     next: {
-      revalidate: 86400, // Cache for 24 hours (static institutional data)
+      revalidate: 86400,
       tags: ['academic-sessions'],
     },
   });
@@ -40,10 +38,10 @@ export async function fetchAcademicSessions() {
 }
 
 export async function fetchStudents() {
-  const response = await fetch(`${API_BASE_URL}/students`, {
+  const response = await fetch('/students', {
     credentials: 'include',
     next: {
-      revalidate: 300, // Cache for 5 minutes
+      revalidate: 300,
       tags: ['students'],
     },
   });

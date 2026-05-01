@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthService, AuthLoginResult } from './auth.service';
 import type { Response, Request } from 'express';
-import { CreateUserDto } from '../user/user.service';
+import type { CreateUserDto } from '../user/user.service';
 
 export class LoginDto {
   email!: string;
