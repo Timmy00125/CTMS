@@ -1,6 +1,7 @@
 import { fetchStudentTranscript } from '@/lib/api';
 import { TranscriptView } from '@/components/transcript/transcript-view';
 import { notFound } from 'next/navigation';
+import { AppShell } from '@/components/layout/app-shell';
 
 interface TranscriptPageProps {
   params: Promise<{
@@ -22,9 +23,8 @@ export default async function TranscriptPage({ params }: TranscriptPageProps) {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="mb-6 text-2xl font-bold">Student Transcript</h1>
+    <AppShell>
       <TranscriptView transcript={transcript} />
-    </div>
+    </AppShell>
   );
 }

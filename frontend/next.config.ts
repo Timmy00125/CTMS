@@ -16,8 +16,36 @@ const nextConfig: NextConfig = {
         destination: "http://localhost:3001/academic-sessions",
       },
       {
+        source: "/academic-sessions/:path*",
+        destination: "http://localhost:3001/academic-sessions/:path*",
+      },
+      {
         source: "/students",
         destination: "http://localhost:3001/students",
+      },
+      {
+        source: "/students/:path*",
+        destination: "http://localhost:3001/students/:path*",
+      },
+      {
+        source: "/grades/:path*",
+        destination: "http://localhost:3001/grades/:path*",
+      },
+      {
+        source: "/gpa/:path*",
+        destination: "http://localhost:3001/gpa/:path*",
+      },
+      {
+        source: "/ingestion/:path*",
+        destination: "http://localhost:3001/ingestion/:path*",
+      },
+      {
+        source: "/courses",
+        destination: "http://localhost:3001/courses",
+      },
+      {
+        source: "/courses/:path*",
+        destination: "http://localhost:3001/courses/:path*",
       },
     ];
   },

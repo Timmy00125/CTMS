@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { TranscriptCourse } from '@/types/transcript';
 
 interface TranscriptTableProps {
@@ -17,47 +17,50 @@ interface TranscriptTableProps {
 
 function getGradeBadgeVariant(
   gradeLetter: string | null,
-): 'default' | 'secondary' | 'destructive' | 'outline' {
-  if (!gradeLetter) return 'outline';
+): 'success' | 'warning' | 'danger' | 'neutral' {
+  if (!gradeLetter) return 'neutral';
   switch (gradeLetter) {
     case 'A':
-      return 'default';
+      return 'success';
     case 'B':
-      return 'secondary';
+      return 'success';
+    case 'C':
+      return 'warning';
     case 'F':
-      return 'destructive';
+      return 'danger';
     default:
-      return 'outline';
+      return 'neutral';
   }
 }
 
 export function TranscriptTable({ courses }: TranscriptTableProps) {
   return (
-    <div className="rounded-md border">
+    <div className="border border-border rounded-sm overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Course Code</TableHead>
-            <TableHead>Course Title</TableHead>
-            <TableHead className="w-[100px] text-right">Credit Units</TableHead>
-            <TableHead className="w-[80px] text-right">Score</TableHead>
-            <TableHead className="w-[100px] text-center">Grade</TableHead>
-            <TableHead className="w-[100px] text-right">Grade Points</TableHead>
+          <TableRow className="bg-muted/50">
+            <TableHead className="w-[100px] text-xs uppercase tracking-wider">Code</TableHead>
+            <TableHead className="text-xs uppercase tracking-wider">Course Title</TableHead>
+            <TableHead className="w-[80px] text-right text-xs uppercase tracking-wider">Units</TableHead>
+            <TableHead className="w-[70px] text-right text-xs uppercase tracking-wider">Score</TableHead>
+            <TableHead className="w-[70px] text-center text-xs uppercase tracking-wider">Grade</TableHead>
+            <TableHead className="w-[80px] text-right text-xs uppercase tracking-wider">Points</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {courses.map((course) => (
             <TableRow key={course.gradeId}>
-              <TableCell className="font-medium">{course.courseCode}</TableCell>
-              <TableCell>{course.courseTitle}</TableCell>
-              <TableCell className="text-right">{course.creditUnits}</TableCell>
-              <TableCell className="text-right">{course.score}</TableCell>
+              <TableCell className="font-tabular text-xs font-medium">{course.courseCode}</TableCell>
+              <TableCell className="text-sm">{course.courseTitle}</TableCell>
+              <TableCell className="text-right font-tabular">{course.creditUnits}</TableCell>
+              <TableCell className="text-right font-tabular font-medium">{course.score}</TableCell>
               <TableCell className="text-center">
-                <Badge variant={getGradeBadgeVariant(course.gradeLetter)}>
-                  {course.gradeLetter || '-'}
-                </Badge>
+                <StatusBadge
+                  status={course.gradeLetter || '-'}
+                  variant={getGradeBadgeVariant(course.gradeLetter)}
+                />
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-right font-tabular text-muted-foreground">
                 {course.gradePoints?.toFixed(1) || '-'}
               </TableCell>
             </TableRow>

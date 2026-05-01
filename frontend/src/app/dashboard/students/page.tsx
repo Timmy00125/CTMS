@@ -1,15 +1,15 @@
 'use client';
 
-import React, { Suspense } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
+import Link from 'next/link';
 import { AppShell } from '@/components/layout/app-shell';
 import { SectionHeader } from '@/components/ui/section-header';
 import { SearchInput } from '@/components/ui/search-input';
 import { DataTable } from '@/components/ui/data-table';
-import { Button } from '@/components/ui/button';
 import { Student } from '@/lib/api';
-import { FileText, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 
+// Mock data for demonstration
 const mockStudents: Student[] = [
   { id: '1', matriculationNo: '2023/001', name: 'Adebayo Chinedu', departmentId: 'CSC', level: 100, createdAt: '2023-09-01', updatedAt: '2023-09-01' },
   { id: '2', matriculationNo: '2023/002', name: 'Okonkwo Ngozi', departmentId: 'MAT', level: 100, createdAt: '2023-09-01', updatedAt: '2023-09-01' },
@@ -23,9 +23,7 @@ const mockStudents: Student[] = [
   { id: '10', matriculationNo: '2021/202', name: 'Abubakar Zainab', departmentId: 'CSC', level: 400, createdAt: '2021-09-01', updatedAt: '2021-09-01' },
 ];
 
-function TranscriptsContent() {
-  const router = useRouter();
-
+export default function StudentsPage() {
   const [search, setSearch] = React.useState('');
   const [loading, setLoading] = React.useState(true);
   const [students, setStudents] = React.useState<Student[]>(mockStudents);
@@ -51,13 +49,10 @@ function TranscriptsContent() {
     return students.filter(
       (s) =>
         s.name.toLowerCase().includes(q) ||
-        s.matriculationNo.toLowerCase().includes(q)
+        s.matriculationNo.toLowerCase().includes(q) ||
+        s.departmentId.toLowerCase().includes(q)
     );
   }, [search, students]);
-
-  function handleViewTranscript(id: string) {
-    router.push(`/dashboard/transcripts/${id}`);
-  }
 
   const columns = [
     {
@@ -96,40 +91,42 @@ function TranscriptsContent() {
     {
       key: 'actions',
       header: '',
-      width: '120px',
+      width: '100px',
       align: 'right' as const,
       render: (row: Student) => (
-        <Button
-          variant="outline"
-          size="xs"
-          className="gap-1"
-          onClick={() => handleViewTranscript(row.id)}
-        >
-          <FileText className="w-3 h-3" />
-          Transcript
-        </Button>
+        <div className="flex items-center justify-end gap-2">
+          <Link
+            href={`/dashboard/students/${row.id}`}
+            className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+          >
+            View
+            <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
       ),
     },
   ];
 
   return (
-    <>
+    <AppShell>
       <SectionHeader
-        title="Transcripts"
-        description="Search and view student academic transcripts"
+        title="Students"
+        description={`${filtered.length} student${filtered.length !== 1 ? 's' : ''} in system`}
       >
-        <SearchInput
-          value={search}
-          onChange={setSearch}
-          placeholder="Search by name or matric..."
-          className="w-64"
-        />
+        <div className="flex items-center gap-2">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search by name, matric, or dept..."
+            className="w-64"
+          />
+        </div>
       </SectionHeader>
 
       {loading ? (
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-          <span className="ml-2 text-sm text-muted-foreground">Loading...</span>
+          <span className="ml-2 text-sm text-muted-foreground">Loading students...</span>
         </div>
       ) : (
         <DataTable
@@ -139,21 +136,6 @@ function TranscriptsContent() {
           emptyMessage="No students found matching your search"
         />
       )}
-    </>
-  );
-}
-
-export default function TranscriptsPage() {
-  return (
-    <AppShell>
-      <Suspense fallback={
-        <div className="flex items-center justify-center py-16">
-          <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-          <span className="ml-2 text-sm text-muted-foreground">Loading...</span>
-        </div>
-      }>
-        <TranscriptsContent />
-      </Suspense>
     </AppShell>
   );
 }

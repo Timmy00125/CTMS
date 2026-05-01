@@ -4,13 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -47,16 +40,29 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-full flex-col items-center justify-center bg-muted/50 px-4 py-12">
-      <Card className="w-full max-w-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">CTMS</CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            <div className="grid gap-2">
-              <label htmlFor="email" className="text-sm font-medium">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
+      <div className="w-full max-w-sm space-y-6">
+        {/* Brand */}
+        <div className="flex items-center justify-center gap-3">
+          <div className="w-9 h-9 bg-foreground text-background flex items-center justify-center text-sm font-bold font-tabular">
+            CT
+          </div>
+          <div className="flex flex-col">
+            <span className="text-lg font-semibold tracking-tight leading-none">CTMS</span>
+            <span className="text-[10px] text-muted-foreground leading-none mt-0.5">Course & Transcript Management</span>
+          </div>
+        </div>
+
+        {/* Form */}
+        <div className="bg-card border border-border rounded-sm p-6">
+          <div className="mb-5">
+            <h2 className="text-base font-semibold">Sign in</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">Enter your credentials to access the system</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Email
               </label>
               <input
@@ -65,12 +71,12 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full h-9 px-3 text-sm bg-background border border-border rounded-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
                 placeholder="name@example.com"
               />
             </div>
-            <div className="grid gap-2">
-              <label htmlFor="password" className="text-sm font-medium">
+            <div className="space-y-1.5">
+              <label htmlFor="password" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Password
               </label>
               <input
@@ -79,24 +85,25 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full h-9 px-3 text-sm bg-background border border-border rounded-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
               />
             </div>
             {error && (
-              <p className="text-sm text-destructive">{error}</p>
+              <p className="text-sm text-destructive bg-destructive/5 px-2 py-1.5 rounded-sm">{error}</p>
             )}
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Signing in...' : 'Sign in'}
+            <Button type="submit" disabled={loading} className="w-full h-9">
+              {loading ? 'Authenticating...' : 'Sign in'}
             </Button>
           </form>
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="text-primary underline-offset-4 hover:underline">
-              Register
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
+        </div>
+
+        <p className="text-center text-sm text-muted-foreground">
+          Don&apos;t have an account?{' '}
+          <Link href="/register" className="text-foreground underline underline-offset-4 hover:no-underline font-medium">
+            Register
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
