@@ -78,13 +78,41 @@ export interface DashboardStats {
 
 // ─── API Functions ───
 
-const API_BASE = '';
+const API_BASE =
+  typeof window === 'undefined'
+    ? (process.env.API_BASE_URL || 'http://localhost:3001')
+    : '';
+
+async function getServerCookies(): Promise<string | undefined> {
+  if (typeof window !== 'undefined') return undefined;
+  try {
+    const { cookies } = await import('next/headers');
+    const cookieStore = await cookies();
+    return cookieStore.toString();
+  } catch {
+    return undefined;
+  }
+}
 
 async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
+  const cookieHeader = await getServerCookies();
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+  };
+
+  if (options?.headers) {
+    const opts = options.headers as Record<string, string>;
+    Object.entries(opts).forEach(([k, v]) => {
+      headers[k] = v;
+    });
+  }
+
   const res = await fetch(`${API_BASE}${url}`, {
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers,
   });
 
   if (!res.ok) {

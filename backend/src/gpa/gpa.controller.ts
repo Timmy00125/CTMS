@@ -8,13 +8,14 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { GpaService } from './gpa.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { CalculateSemesterGpaDto } from './dto/calculate-gpa.dto';
 
 @Controller('gpa')
-@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class GpaController {
   constructor(private readonly gpaService: GpaService) {}
 
