@@ -1,12 +1,17 @@
 import { PrismaClient } from '@prisma/client';
+import * as argon2 from 'argon2';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const adminPassword = await argon2.hash('admin123');
+  const lecturerPassword = await argon2.hash('lecturer123');
+  const examOfficerPassword = await argon2.hash('officer123');
+
   const admin = await prisma.user.create({
     data: {
       email: 'admin@ctms.edu',
-      passwordHash: 'hash', // to be hashed
+      passwordHash: adminPassword,
       name: 'System Admin',
       roles: ['Admin'],
     },
@@ -15,9 +20,19 @@ async function main() {
   const lecturer = await prisma.user.create({
     data: {
       email: 'lecturer@ctms.edu',
-      passwordHash: 'hash',
+      passwordHash: lecturerPassword,
       name: 'Dr. Smith',
       roles: ['Lecturer'],
+      departmentId: 'dept-123',
+    },
+  });
+
+  const examOfficer = await prisma.user.create({
+    data: {
+      email: 'examofficer@ctms.edu',
+      passwordHash: examOfficerPassword,
+      name: 'Jane Exam Officer',
+      roles: ['ExamOfficer'],
       departmentId: 'dept-123',
     },
   });
@@ -38,6 +53,10 @@ async function main() {
   });
 
   console.log('Seed completed');
+  console.log('Users created:');
+  console.log('  Admin:        admin@ctms.edu       / admin123');
+  console.log('  Lecturer:     lecturer@ctms.edu    / lecturer123');
+  console.log('  Exam Officer: examofficer@ctms.edu / officer123');
 }
 
 main()
