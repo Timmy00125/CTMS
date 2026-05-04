@@ -144,9 +144,7 @@ export async function logoutUser() {
 
 export async function getCurrentUser(): Promise<User | null> {
   try {
-    // The backend doesn't have a /auth/me endpoint, but we can infer from context
-    // For now, return null and handle auth state client-side
-    return null;
+    return await apiFetch<User>('/auth/me');
   } catch {
     return null;
   }

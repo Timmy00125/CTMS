@@ -82,4 +82,18 @@ export class AuthService {
       throw new UnauthorizedException();
     }
   }
+
+  async verifyToken(token: string): Promise<TokenPayload> {
+    return this.jwtService.verifyAsync<TokenPayload>(token);
+  }
+
+  async findUserById(id: string): Promise<AuthLoginResult | null> {
+    const user = await this.userService.findById(id);
+    if (!user) {
+      return null;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordHash, createdAt, updatedAt, ...result } = user;
+    return result;
+  }
 }

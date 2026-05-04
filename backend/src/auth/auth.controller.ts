@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   Body,
   Res,
@@ -113,5 +114,22 @@ export class AuthController {
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');
     return { message: 'Logged out successfully' };
+  }
+
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  async me(@Req() req: Request): Promise<AuthLoginResult | null> {
+    const accessToken = req.cookies['access_token'] as string | undefined;
+    if (!accessToken) {
+      return null;
+    }
+
+    try {
+      const payload = await this.authService.verifyToken(accessToken);
+      const user = await this.authService.findUserById(payload.sub);
+      return user;
+    } catch {
+      return null;
+    }
   }
 }

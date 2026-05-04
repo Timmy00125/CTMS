@@ -10,6 +10,8 @@ import { GradeModule } from './grade/grade.module';
 import { GpaModule } from './gpa/gpa.module';
 import { TranscriptModule } from './transcript/transcript.module';
 import { StudentModule } from './student/student.module';
+import { CourseModule } from './course/course.module';
+import { AcademicSessionModule } from './academic-session/academic-session.module';
 import { throttlerConfig } from './config/throttler.config';
 
 @Module({
@@ -24,6 +26,8 @@ import { throttlerConfig } from './config/throttler.config';
     GpaModule,
     TranscriptModule,
     StudentModule,
+    CourseModule,
+    AcademicSessionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
