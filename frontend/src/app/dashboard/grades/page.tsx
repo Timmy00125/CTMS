@@ -6,28 +6,34 @@ import { SectionHeader } from '@/components/ui/section-header';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
-import { Grade } from '@/lib/api';
-import { Loader2, Save, CheckCircle } from 'lucide-react';
-
-const mockGrades: Grade[] = [
-  { id: '1', studentId: '1', courseId: '1', semesterId: '1', score: 85, gradeLetter: 'A', gradePoints: 5.0, status: 'PUBLISHED', createdAt: '2023-12-01', updatedAt: '2023-12-01' },
-  { id: '2', studentId: '2', courseId: '1', semesterId: '1', score: 72, gradeLetter: 'B', gradePoints: 4.0, status: 'PUBLISHED', createdAt: '2023-12-01', updatedAt: '2023-12-01' },
-  { id: '3', studentId: '3', courseId: '2', semesterId: '1', score: 91, gradeLetter: 'A', gradePoints: 5.0, status: 'PUBLISHED', createdAt: '2023-12-01', updatedAt: '2023-12-01' },
-  { id: '4', studentId: '4', courseId: '3', semesterId: '2', score: 65, gradeLetter: 'C', gradePoints: 3.0, status: 'PENDING_APPROVAL', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
-  { id: '5', studentId: '5', courseId: '4', semesterId: '2', score: 78, gradeLetter: 'B', gradePoints: 4.0, status: 'PENDING_APPROVAL', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
-  { id: '6', studentId: '6', courseId: '5', semesterId: '2', score: 55, gradeLetter: 'D', gradePoints: 2.0, status: 'DRAFT', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
-  { id: '7', studentId: '7', courseId: '6', semesterId: '2', score: 45, gradeLetter: 'F', gradePoints: 0.0, status: 'DRAFT', createdAt: '2024-01-15', updatedAt: '2024-01-15' },
-  { id: '8', studentId: '8', courseId: '7', semesterId: '3', score: 88, gradeLetter: 'A', gradePoints: 5.0, status: 'PUBLISHED', createdAt: '2024-05-01', updatedAt: '2024-05-01' },
-];
+import { useAuth } from '@/lib/contexts/auth-context';
+import { useToast } from '@/lib/contexts/toast-context';
+import { Grade, publishGrades } from '@/lib/api';
+import { Loader2, Save, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function GradesPage() {
+  const { user } = useAuth();
+  const { addToast } = useToast();
   const [loading, setLoading] = React.useState(true);
-  const [grades] = React.useState<Grade[]>(mockGrades);
+  const [error, setError] = React.useState<string | null>(null);
+  const [grades, setGrades] = React.useState<Grade[]>([]);
   const [filter, setFilter] = React.useState<'ALL' | 'DRAFT' | 'PENDING_APPROVAL' | 'PUBLISHED'>('ALL');
 
   React.useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
+    async function loadGrades() {
+      try {
+        setLoading(true);
+        setError(null);
+        // Fetch grades for the current user's students or all grades
+        // For now, we'll show an empty state as there's no "all grades" endpoint
+        setGrades([]);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load grades');
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadGrades();
   }, []);
 
   const filtered = React.useMemo(() => {
@@ -44,15 +50,17 @@ export default function GradesPage() {
     };
   }, [grades]);
 
+  async function handlePublish(courseId: string, semesterId: string) {
+    try {
+      await publishGrades(courseId, semesterId);
+      addToast('Grades published successfully', 'success');
+      // Reload grades
+    } catch (err) {
+      addToast(err instanceof Error ? err.message : 'Failed to publish grades', 'error');
+    }
+  }
+
   const columns = [
-    {
-      key: 'id',
-      header: 'ID',
-      width: '60px',
-      render: (row: Grade) => (
-        <span className="font-tabular text-xs text-muted-foreground">{row.id}</span>
-      ),
-    },
     {
       key: 'student',
       header: 'Student',
@@ -115,8 +123,13 @@ export default function GradesPage() {
               Submit
             </Button>
           )}
-          {row.status === 'PENDING_APPROVAL' && (
-            <Button variant="outline" size="xs" className="h-6 px-2 text-[10px]">
+          {row.status === 'PENDING_APPROVAL' && user?.roles?.includes('ExamOfficer') && (
+            <Button
+              variant="outline"
+              size="xs"
+              className="h-6 px-2 text-[10px]"
+              onClick={() => handlePublish(row.courseId, row.semesterId)}
+            >
               <CheckCircle className="w-3 h-3 mr-1" />
               Publish
             </Button>
@@ -162,6 +175,11 @@ export default function GradesPage() {
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           <span className="ml-2 text-sm text-muted-foreground">Loading grades...</span>
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center py-16 gap-4">
+          <AlertCircle className="w-8 h-8 text-destructive" />
+          <p className="text-sm text-destructive">{error}</p>
         </div>
       ) : (
         <DataTable

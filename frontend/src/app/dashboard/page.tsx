@@ -6,51 +6,58 @@ import { AppShell } from '@/components/layout/app-shell';
 import { StatCard } from '@/components/ui/stat-card';
 import { SectionHeader } from '@/components/ui/section-header';
 import { StatusBadge } from '@/components/ui/status-badge';
+import { useStudents, useCourses } from '@/lib/hooks/use-data';
+import { useAuth } from '@/lib/contexts/auth-context';
 import {
   Users,
   BookOpen,
   FileText,
   GraduationCap,
-  AlertCircle,
-  Clock,
   ArrowRight,
 } from 'lucide-react';
 
-// Mock data for demo purposes - in production these would come from API
-const recentActivity = [
-  { id: '1', action: 'Grade published', target: 'CSC 101 — Introduction to Programming', user: 'Dr. Smith', time: '2 hours ago', status: 'PUBLISHED' as const },
-  { id: '2', action: 'Grade amended', target: 'MAT 201 — Linear Algebra', user: 'Dr. Jones', time: '5 hours ago', status: 'PENDING_APPROVAL' as const },
-  { id: '3', action: 'Student registered', target: 'John Doe (2023/001)', user: 'Admin', time: '1 day ago', status: 'INFO' as const },
-  { id: '4', action: 'Course created', target: 'PHY 301 — Quantum Mechanics', user: 'Admin', time: '2 days ago', status: 'INFO' as const },
-];
-
-const quickStats = [
-  { label: 'Total Students', value: '1,247', change: '+12 this week', icon: Users },
-  { label: 'Active Courses', value: '86', change: '+3 this semester', icon: BookOpen },
-  { label: 'Transcripts Generated', value: '3,892', change: '+45 this month', icon: FileText },
-  { label: 'Pending Grades', value: '142', change: 'Requires attention', icon: AlertCircle, alert: true },
-];
-
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const { data: students, loading: studentsLoading } = useStudents();
+  const { data: courses, loading: coursesLoading } = useCourses();
+
+  const loading = studentsLoading || coursesLoading;
+
+  const quickStats = [
+    { label: 'Total Students', value: students.length.toString(), icon: Users },
+    { label: 'Active Courses', value: courses.length.toString(), icon: BookOpen },
+    { label: 'Transcripts Generated', value: '—', icon: FileText },
+    { label: 'Pending Grades', value: '—', icon: GraduationCap },
+  ];
+
   return (
     <AppShell>
       <SectionHeader
         title="Dashboard"
-        description="Overview of academic records and system activity"
+        description={`Welcome back, ${user?.name || 'User'}. Overview of academic records and system activity.`}
       />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-        {quickStats.map((stat) => (
-          <StatCard
-            key={stat.label}
-            title={stat.label}
-            value={stat.value}
-            description={stat.change}
-            icon={stat.icon}
-            className={stat.alert ? 'border-l-2 border-l-warning' : ''}
-          />
-        ))}
+        {loading ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-card border border-border rounded-sm p-4">
+              <div className="animate-pulse space-y-3">
+                <div className="h-4 bg-muted rounded w-24" />
+                <div className="h-8 bg-muted rounded w-16" />
+              </div>
+            </div>
+          ))
+        ) : (
+          quickStats.map((stat) => (
+            <StatCard
+              key={stat.label}
+              title={stat.label}
+              value={stat.value}
+              icon={stat.icon}
+            />
+          ))
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -116,35 +123,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Recent Activity */}
-          <div className="bg-card border border-border rounded-sm">
-            <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-              <h3 className="text-sm font-semibold">Recent Activity</h3>
-              <span className="text-xs text-muted-foreground">Last 7 days</span>
-            </div>
-            <div className="divide-y divide-border">
-              {recentActivity.map((activity) => (
-                <div key={activity.id} className="px-4 py-3 flex items-center gap-3">
-                  <StatusBadge status={activity.status} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{activity.action}</p>
-                    <p className="text-xs text-muted-foreground truncate">{activity.target}</p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-xs text-muted-foreground">{activity.user}</p>
-                    <p className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3" />
-                      {activity.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* System Status */}
-        <div className="space-y-6">
+          {/* System Status */}
           <div className="bg-card border border-border rounded-sm">
             <div className="px-4 py-3 border-b border-border">
               <h3 className="text-sm font-semibold">System Status</h3>
@@ -168,44 +147,21 @@ export default function DashboardPage() {
                   <div className="h-full w-[99%] bg-status-success rounded-full" />
                 </div>
               </div>
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Storage</span>
-                  <span className="text-xs text-muted-foreground">42% used</span>
-                </div>
-                <div className="h-1 bg-muted rounded-full overflow-hidden">
-                  <div className="h-full w-[42%] bg-foreground rounded-full" />
-                </div>
-              </div>
             </div>
           </div>
+        </div>
 
+        {/* Recent Activity Placeholder */}
+        <div className="space-y-6">
           <div className="bg-card border border-border rounded-sm">
-            <div className="px-4 py-3 border-b border-border">
-              <h3 className="text-sm font-semibold">Grade Distribution</h3>
+            <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+              <h3 className="text-sm font-semibold">Recent Activity</h3>
+              <span className="text-xs text-muted-foreground">Last 7 days</span>
             </div>
-            <div className="p-4 space-y-3">
-              {[
-                { grade: 'A', count: 312, pct: 28 },
-                { grade: 'B', count: 445, pct: 40 },
-                { grade: 'C', count: 223, pct: 20 },
-                { grade: 'D', count: 89, pct: 8 },
-                { grade: 'F', count: 45, pct: 4 },
-              ].map((item) => (
-                <div key={item.grade} className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-tabular font-medium w-6">{item.grade}</span>
-                    <span className="text-xs text-muted-foreground">{item.count} students</span>
-                    <span className="text-xs text-muted-foreground w-8 text-right">{item.pct}%</span>
-                  </div>
-                  <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-foreground rounded-full transition-all"
-                      style={{ width: `${item.pct}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+            <div className="p-4">
+              <p className="text-sm text-muted-foreground text-center py-8">
+                Activity tracking coming soon
+              </p>
             </div>
           </div>
         </div>

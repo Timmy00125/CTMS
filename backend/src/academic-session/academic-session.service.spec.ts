@@ -40,12 +40,24 @@ describe('AcademicSessionService', () => {
           endDate: new Date('2024-06-30'),
           isActive: false,
           semesters: [
-            { id: 's1', name: 'First Semester', academicSessionId: '1', isActive: false },
-            { id: 's2', name: 'Second Semester', academicSessionId: '1', isActive: false },
+            {
+              id: 's1',
+              name: 'First Semester',
+              academicSessionId: '1',
+              isActive: false,
+            },
+            {
+              id: 's2',
+              name: 'Second Semester',
+              academicSessionId: '1',
+              isActive: false,
+            },
           ],
         },
       ];
-      mockPrismaService.academicSession.findMany.mockResolvedValue(mockSessions);
+      mockPrismaService.academicSession.findMany.mockResolvedValue(
+        mockSessions,
+      );
 
       const result = await service.findAll();
 

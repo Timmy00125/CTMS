@@ -15,7 +15,10 @@ describe('AppController (e2e)', () => {
   });
 
   it('/ (GET) should return hello world', () => {
-    return request(app.getHttpServer()).get('/').expect(200).expect('Hello World!');
+    return request(app.getHttpServer())
+      .get('/')
+      .expect(200)
+      .expect('Hello World!');
   });
 
   it('/ (GET) should have correct content type', async () => {

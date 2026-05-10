@@ -1,11 +1,17 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Bootstrap');
+
+  // Security headers
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  app.use(helmet());
 
   // Enable cookie parser for JWT tokens
   app.use(cookieParser());
@@ -29,9 +35,11 @@ async function bootstrap() {
   });
 
   await app.listen(process.env.PORT ?? 3000);
+  logger.log(`Application is running on: ${await app.getUrl()}`);
 }
 
 bootstrap().catch((err) => {
-  console.error(err);
+  const logger = new Logger('Bootstrap');
+  logger.error('Failed to start application', err);
   process.exit(1);
 });

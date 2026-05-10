@@ -49,6 +49,19 @@ export class GradeController {
     return this.gradeService.bulkSubmitGrades(dto.grades, req.user.sub);
   }
 
+  @Patch('submit-for-approval')
+  @Roles(Role.Lecturer, Role.Admin)
+  async submitForApproval(
+    @Body() body: { courseId: string; semesterId: string },
+    @Request() req: RequestWithUser,
+  ) {
+    return this.gradeService.submitForApproval(
+      body.courseId,
+      body.semesterId,
+      req.user.sub,
+    );
+  }
+
   @Patch('publish')
   @Roles(Role.ExamOfficer, Role.Admin)
   async publishGrades(

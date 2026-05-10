@@ -6,43 +6,13 @@ import { AppShell } from '@/components/layout/app-shell';
 import { SectionHeader } from '@/components/ui/section-header';
 import { SearchInput } from '@/components/ui/search-input';
 import { DataTable } from '@/components/ui/data-table';
+import { useStudents } from '@/lib/hooks/use-data';
 import { Student } from '@/lib/api';
-import { ArrowRight, Loader2 } from 'lucide-react';
-
-// Mock data for demonstration
-const mockStudents: Student[] = [
-  { id: '1', matriculationNo: '2023/001', name: 'Adebayo Chinedu', departmentId: 'CSC', level: 100, createdAt: '2023-09-01', updatedAt: '2023-09-01' },
-  { id: '2', matriculationNo: '2023/002', name: 'Okonkwo Ngozi', departmentId: 'MAT', level: 100, createdAt: '2023-09-01', updatedAt: '2023-09-01' },
-  { id: '3', matriculationNo: '2023/003', name: 'Ibrahim Fatima', departmentId: 'PHY', level: 100, createdAt: '2023-09-01', updatedAt: '2023-09-01' },
-  { id: '4', matriculationNo: '2023/004', name: 'Okafor Emeka', departmentId: 'CSC', level: 200, createdAt: '2023-09-01', updatedAt: '2023-09-01' },
-  { id: '5', matriculationNo: '2023/005', name: 'Adeyemi Tolu', departmentId: 'CHM', level: 200, createdAt: '2023-09-01', updatedAt: '2023-09-01' },
-  { id: '6', matriculationNo: '2022/101', name: 'Mohammed Aisha', departmentId: 'MAT', level: 300, createdAt: '2022-09-01', updatedAt: '2022-09-01' },
-  { id: '7', matriculationNo: '2022/102', name: 'Nwosu Chijioke', departmentId: 'CSC', level: 300, createdAt: '2022-09-01', updatedAt: '2022-09-01' },
-  { id: '8', matriculationNo: '2022/103', name: 'Balogun Sekinat', departmentId: 'PHY', level: 300, createdAt: '2022-09-01', updatedAt: '2022-09-01' },
-  { id: '9', matriculationNo: '2021/201', name: 'Ezeudu Ifeanyi', departmentId: 'CHM', level: 400, createdAt: '2021-09-01', updatedAt: '2021-09-01' },
-  { id: '10', matriculationNo: '2021/202', name: 'Abubakar Zainab', departmentId: 'CSC', level: 400, createdAt: '2021-09-01', updatedAt: '2021-09-01' },
-];
+import { ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 export default function StudentsPage() {
   const [search, setSearch] = React.useState('');
-  const [loading, setLoading] = React.useState(true);
-  const [students, setStudents] = React.useState<Student[]>(mockStudents);
-
-  React.useEffect(() => {
-    let cancelled = false;
-    fetch('/students', { credentials: 'include' })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (!cancelled && data && Array.isArray(data) && data.length > 0) {
-          setStudents(data);
-        }
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, []);
+  const { data: students, loading, error, refetch } = useStudents();
 
   const filtered = React.useMemo(() => {
     const q = search.toLowerCase();
@@ -127,6 +97,17 @@ export default function StudentsPage() {
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           <span className="ml-2 text-sm text-muted-foreground">Loading students...</span>
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center py-16 gap-4">
+          <AlertCircle className="w-8 h-8 text-destructive" />
+          <p className="text-sm text-destructive">{error}</p>
+          <button
+            onClick={() => refetch()}
+            className="text-sm text-muted-foreground hover:text-foreground underline"
+          >
+            Try again
+          </button>
         </div>
       ) : (
         <DataTable

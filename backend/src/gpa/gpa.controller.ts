@@ -4,6 +4,7 @@ import {
   Get,
   Body,
   Param,
+  Query,
   UseGuards,
   BadRequestException,
 } from '@nestjs/common';
@@ -60,7 +61,7 @@ export class GpaController {
   @Roles(Role.ExamOfficer, Role.Admin)
   async getStudentGpa(
     @Param('studentId') studentId: string,
-    @Body('semesterId') semesterId: string,
+    @Query('semesterId') semesterId?: string,
   ) {
     const [gpaResult, cgpaResult] = await Promise.all([
       semesterId
@@ -86,7 +87,12 @@ export class GpaController {
   @Get('semester/:semesterId/students')
   @Roles(Role.ExamOfficer, Role.Admin)
   async getSemesterGpaReport(@Param('semesterId') semesterId: string) {
-    const results = await this.gpaService.calculateBatchGpa([], semesterId);
+    const studentIds =
+      await this.gpaService.getStudentIdsForSemester(semesterId);
+    const results = await this.gpaService.calculateBatchGpa(
+      studentIds,
+      semesterId,
+    );
 
     const students = Array.from(results.entries()).map(([studentId, data]) => ({
       studentId,

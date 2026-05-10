@@ -79,12 +79,23 @@ export async function loginAs(
   password: string,
 ): Promise<request.SuperAgentTest> {
   const agent = createAgent(app);
-  const response = await agent.post('/auth/login').send({ email, password }).expect(200);
+  const response = await agent
+    .post('/auth/login')
+    .send({ email, password })
+    .expect(200);
 
   // Verify cookies were set
   expect(response.headers['set-cookie']).toBeDefined();
-  expect(response.headers['set-cookie'].some((c: string) => c.includes('access_token'))).toBe(true);
-  expect(response.headers['set-cookie'].some((c: string) => c.includes('refresh_token'))).toBe(true);
+  expect(
+    response.headers['set-cookie'].some((c: string) =>
+      c.includes('access_token'),
+    ),
+  ).toBe(true);
+  expect(
+    response.headers['set-cookie'].some((c: string) =>
+      c.includes('refresh_token'),
+    ),
+  ).toBe(true);
 
   return agent;
 }
@@ -199,7 +210,10 @@ export async function createGrade(
   });
 }
 
-function mapScoreToGrade(score: number): { gradeLetter: string; gradePoints: number } {
+function mapScoreToGrade(score: number): {
+  gradeLetter: string;
+  gradePoints: number;
+} {
   if (score >= 70) return { gradeLetter: 'A', gradePoints: 5.0 };
   if (score >= 60) return { gradeLetter: 'B', gradePoints: 4.0 };
   if (score >= 50) return { gradeLetter: 'C', gradePoints: 3.0 };

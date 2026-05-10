@@ -56,8 +56,16 @@ describe('GradeController (e2e)', () => {
     });
 
     adminAgent = await loginAs(app, 'admin@grade.test', 'AdminPass123!');
-    lecturerAgent = await loginAs(app, 'lecturer@grade.test', 'LecturerPass123!');
-    examOfficerAgent = await loginAs(app, 'examofficer@grade.test', 'ExamOfficerPass123!');
+    lecturerAgent = await loginAs(
+      app,
+      'lecturer@grade.test',
+      'LecturerPass123!',
+    );
+    examOfficerAgent = await loginAs(
+      app,
+      'examofficer@grade.test',
+      'ExamOfficerPass123!',
+    );
   });
 
   describe('POST /grades', () => {
@@ -76,7 +84,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -114,7 +124,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -149,7 +161,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -165,7 +179,9 @@ describe('GradeController (e2e)', () => {
         })
         .expect(400);
 
-      expect(response.body.message).toContain('score must not be greater than 100');
+      expect(response.body.message).toContain(
+        'score must not be greater than 100',
+      );
     });
 
     it('should reject grade submission with score < 0', async () => {
@@ -183,7 +199,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -217,7 +235,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -233,7 +253,9 @@ describe('GradeController (e2e)', () => {
         })
         .expect(400);
 
-      expect(response.body.message).toContain('score must be an integer number');
+      expect(response.body.message).toContain(
+        'score must be an integer number',
+      );
     });
 
     it('should reject grade for non-existent student', async () => {
@@ -244,7 +266,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -271,7 +295,9 @@ describe('GradeController (e2e)', () => {
         level: 100,
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -333,7 +359,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -377,7 +405,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -427,7 +457,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -437,8 +469,18 @@ describe('GradeController (e2e)', () => {
         .post('/grades/bulk')
         .send({
           grades: [
-            { studentId: student1.id, courseId: course.id, semesterId: semester.id, score: 70 },
-            { studentId: student2.id, courseId: course.id, semesterId: semester.id, score: 80 },
+            {
+              studentId: student1.id,
+              courseId: course.id,
+              semesterId: semester.id,
+              score: 70,
+            },
+            {
+              studentId: student2.id,
+              courseId: course.id,
+              semesterId: semester.id,
+              score: 80,
+            },
           ],
         })
         .expect(201);
@@ -462,7 +504,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -472,8 +516,18 @@ describe('GradeController (e2e)', () => {
         .post('/grades/bulk')
         .send({
           grades: [
-            { studentId: student.id, courseId: course.id, semesterId: semester.id, score: 70 },
-            { studentId: 'non-existent', courseId: course.id, semesterId: semester.id, score: 80 },
+            {
+              studentId: student.id,
+              courseId: course.id,
+              semesterId: semester.id,
+              score: 70,
+            },
+            {
+              studentId: 'non-existent',
+              courseId: course.id,
+              semesterId: semester.id,
+              score: 80,
+            },
           ],
         })
         .expect(201);
@@ -489,11 +543,16 @@ describe('GradeController (e2e)', () => {
         .send({ grades: [] })
         .expect(400);
 
-      expect(response.body.message).toContain('grades must contain at least 1 elements');
+      expect(response.body.message).toContain(
+        'grades must contain at least 1 elements',
+      );
     });
 
     it('should reject missing grades field', async () => {
-      const response = await lecturerAgent.post('/grades/bulk').send({}).expect(400);
+      const response = await lecturerAgent
+        .post('/grades/bulk')
+        .send({})
+        .expect(400);
 
       expect(response.body).toHaveProperty('statusCode', 400);
     });
@@ -513,7 +572,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -535,7 +596,12 @@ describe('GradeController (e2e)', () => {
         .post('/grades/bulk')
         .send({
           grades: [
-            { studentId: student.id, courseId: course.id, semesterId: semester.id, score: 80 },
+            {
+              studentId: student.id,
+              courseId: course.id,
+              semesterId: semester.id,
+              score: 80,
+            },
           ],
         })
         .expect(201);
@@ -561,7 +627,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -607,7 +675,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -640,7 +710,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -665,7 +737,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -695,7 +769,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -741,7 +817,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -783,7 +861,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -823,7 +903,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -844,7 +926,9 @@ describe('GradeController (e2e)', () => {
         })
         .expect(400);
 
-      expect(response.body.message).toContain('score must not be greater than 100');
+      expect(response.body.message).toContain(
+        'score must not be greater than 100',
+      );
     });
 
     it('should reject amendment for non-existent grade', async () => {
@@ -873,7 +957,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -910,7 +996,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -959,7 +1047,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -1004,7 +1094,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -1042,7 +1134,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -1125,7 +1219,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -1156,7 +1252,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -1187,7 +1285,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -1223,7 +1323,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -1237,7 +1339,9 @@ describe('GradeController (e2e)', () => {
         status: 'PUBLISHED',
       });
 
-      const response = await adminAgent.get(`/grades/${grade.id}/audit`).expect(200);
+      const response = await adminAgent
+        .get(`/grades/${grade.id}/audit`)
+        .expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
     });
@@ -1257,7 +1361,9 @@ describe('GradeController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,

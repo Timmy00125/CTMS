@@ -67,15 +67,6 @@ export interface User {
   departmentId?: string;
 }
 
-export interface DashboardStats {
-  totalStudents: number;
-  totalCourses: number;
-  totalGrades: number;
-  publishedGrades: number;
-  pendingGrades: number;
-  draftGrades: number;
-}
-
 // ─── API Functions ───
 
 const API_BASE =
@@ -199,6 +190,13 @@ export async function submitGrade(dto: {
   });
 }
 
+export async function submitForApproval(courseId: string, semesterId: string): Promise<void> {
+  return apiFetch<void>('/grades/submit-for-approval', {
+    method: 'PATCH',
+    body: JSON.stringify({ courseId, semesterId }),
+  });
+}
+
 export async function publishGrades(courseId: string, semesterId: string): Promise<void> {
   return apiFetch<void>('/grades/publish', {
     method: 'PATCH',
@@ -229,23 +227,4 @@ export async function calculateSemesterGpa(semesterId: string, studentIds?: stri
       body: JSON.stringify({ semesterId, studentIds }),
     }
   );
-}
-
-// Dashboard stats (computed from other endpoints)
-export async function fetchDashboardStats(): Promise<DashboardStats> {
-  const [students, courses] = await Promise.all([
-    fetchStudents().catch(() => [] as Student[]),
-    fetchCourses().catch(() => [] as Course[]),
-    // We don't have a direct grades endpoint, so we approximate
-    Promise.resolve([] as Grade[]),
-  ]);
-
-  return {
-    totalStudents: students.length,
-    totalCourses: courses.length,
-    totalGrades: 0,
-    publishedGrades: 0,
-    pendingGrades: 0,
-    draftGrades: 0,
-  };
 }

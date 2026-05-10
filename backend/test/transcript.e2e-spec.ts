@@ -56,8 +56,16 @@ describe('TranscriptController (e2e)', () => {
     });
 
     adminAgent = await loginAs(app, 'admin@transcript.test', 'AdminPass123!');
-    examOfficerAgent = await loginAs(app, 'examofficer@transcript.test', 'ExamOfficerPass123!');
-    lecturerAgent = await loginAs(app, 'lecturer@transcript.test', 'LecturerPass123!');
+    examOfficerAgent = await loginAs(
+      app,
+      'examofficer@transcript.test',
+      'ExamOfficerPass123!',
+    );
+    lecturerAgent = await loginAs(
+      app,
+      'lecturer@transcript.test',
+      'LecturerPass123!',
+    );
   });
 
   describe('GET /transcript/:studentId', () => {
@@ -83,7 +91,9 @@ describe('TranscriptController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -118,8 +128,12 @@ describe('TranscriptController (e2e)', () => {
       expect(response.body.academicSessions).toHaveLength(1);
       expect(response.body.academicSessions[0].name).toBe('2023/2024');
       expect(response.body.academicSessions[0].semesters).toHaveLength(1);
-      expect(response.body.academicSessions[0].semesters[0].name).toBe('First Semester');
-      expect(response.body.academicSessions[0].semesters[0].courses).toHaveLength(2);
+      expect(response.body.academicSessions[0].semesters[0].name).toBe(
+        'First Semester',
+      );
+      expect(
+        response.body.academicSessions[0].semesters[0].courses,
+      ).toHaveLength(2);
 
       expect(response.body.cgpa).toBe(4.43);
       expect(response.body.totalCreditUnits).toBe(7);
@@ -165,13 +179,17 @@ describe('TranscriptController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session1 = await createAcademicSession(prisma, { name: '2022/2023' });
+      const session1 = await createAcademicSession(prisma, {
+        name: '2022/2023',
+      });
       const semester1 = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session1.id,
       });
 
-      const session2 = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session2 = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester2 = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session2.id,
@@ -217,7 +235,9 @@ describe('TranscriptController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -311,7 +331,9 @@ describe('TranscriptController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,

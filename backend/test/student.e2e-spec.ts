@@ -44,7 +44,11 @@ describe('StudentController (e2e)', () => {
     });
 
     adminAgent = await loginAs(app, 'admin@student.test', 'AdminPass123!');
-    lecturerAgent = await loginAs(app, 'lecturer@student.test', 'LecturerPass123!');
+    lecturerAgent = await loginAs(
+      app,
+      'lecturer@student.test',
+      'LecturerPass123!',
+    );
   });
 
   describe('GET /students', () => {
@@ -108,7 +112,9 @@ describe('StudentController (e2e)', () => {
         level: 300,
       });
 
-      const response = await adminAgent.get(`/students/${student.id}`).expect(200);
+      const response = await adminAgent
+        .get(`/students/${student.id}`)
+        .expect(200);
 
       expect(response.body.id).toBe(student.id);
       expect(response.body.matriculationNo).toBe('MAT/004');
@@ -118,7 +124,9 @@ describe('StudentController (e2e)', () => {
     });
 
     it('should return 404 for non-existent student', async () => {
-      const response = await adminAgent.get('/students/non-existent-id').expect(404);
+      const response = await adminAgent
+        .get('/students/non-existent-id')
+        .expect(404);
 
       expect(response.body.message).toContain('Student not found');
     });
@@ -131,7 +139,9 @@ describe('StudentController (e2e)', () => {
         level: 100,
       });
 
-      await request(app.getHttpServer()).get(`/students/${student.id}`).expect(401);
+      await request(app.getHttpServer())
+        .get(`/students/${student.id}`)
+        .expect(401);
     });
 
     it('should return student with correct data types', async () => {
@@ -142,7 +152,9 @@ describe('StudentController (e2e)', () => {
         level: 100,
       });
 
-      const response = await lecturerAgent.get(`/students/${student.id}`).expect(200);
+      const response = await lecturerAgent
+        .get(`/students/${student.id}`)
+        .expect(200);
 
       expect(typeof response.body.id).toBe('string');
       expect(typeof response.body.matriculationNo).toBe('string');

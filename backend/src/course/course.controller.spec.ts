@@ -13,9 +13,7 @@ describe('CourseController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CourseController],
-      providers: [
-        { provide: CourseService, useValue: mockCourseService },
-      ],
+      providers: [{ provide: CourseService, useValue: mockCourseService }],
     }).compile();
 
     controller = module.get<CourseController>(CourseController);
@@ -39,7 +37,11 @@ describe('CourseController', () => {
           creditUnits: 3,
           departmentId: 'dept-cs-001',
           lecturerId: 'lecturer-1',
-          lecturer: { id: 'lecturer-1', name: 'Dr. Smith', email: 'smith@ctms.edu' },
+          lecturer: {
+            id: 'lecturer-1',
+            name: 'Dr. Smith',
+            email: 'smith@ctms.edu',
+          },
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -62,7 +64,11 @@ describe('CourseController', () => {
         creditUnits: 3,
         departmentId: 'dept-cs-001',
         lecturerId: 'lecturer-1',
-        lecturer: { id: 'lecturer-1', name: 'Dr. Smith', email: 'smith@ctms.edu' },
+        lecturer: {
+          id: 'lecturer-1',
+          name: 'Dr. Smith',
+          email: 'smith@ctms.edu',
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
       };

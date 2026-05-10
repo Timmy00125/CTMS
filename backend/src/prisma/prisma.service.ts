@@ -1,4 +1,9 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Logger,
+} from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Pool, PoolConfig } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -8,6 +13,7 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
+  private readonly logger = new Logger(PrismaService.name);
   private pool: Pool;
 
   constructor() {
@@ -15,11 +21,11 @@ export class PrismaService
 
     const poolConfig: PoolConfig = {
       connectionString,
-      max: 20, // Maximum number of clients in the pool
-      min: 5, // Minimum number of idle clients
-      idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-      connectionTimeoutMillis: 5000, // Fail fast if connection takes > 5s
-      maxUses: 7500, // Close and replace a connection after it has been used 7500 times
+      max: 20,
+      min: 5,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000,
+      maxUses: 7500,
     };
 
     const pool = new Pool(poolConfig);
@@ -29,19 +35,18 @@ export class PrismaService
 
     this.pool = pool;
 
-    // Log pool events for monitoring
     this.pool.on('connect', () => {
-      console.debug('Database pool: new client connected');
+      this.logger.debug('Database pool: new client connected');
     });
 
     this.pool.on('error', (err) => {
-      console.error('Database pool: unexpected error on idle client', err);
+      this.logger.error('Database pool: unexpected error on idle client', err);
     });
   }
 
   async onModuleInit() {
     await this.$connect();
-    console.info(
+    this.logger.log(
       `Database pool initialized (max: ${this.pool.options.max} connections)`,
     );
   }
@@ -49,7 +54,7 @@ export class PrismaService
   async onModuleDestroy() {
     await this.$disconnect();
     await this.pool.end();
-    console.info('Database pool closed');
+    this.logger.log('Database pool closed');
   }
 
   getPoolStats() {

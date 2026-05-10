@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
@@ -13,27 +13,34 @@ import {
   Menu,
   X,
 } from 'lucide-react';
+import { useAuth } from '@/lib/contexts/auth-context';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dashboard/students', label: 'Students', icon: Users },
-  { href: '/dashboard/courses', label: 'Courses', icon: BookOpen },
-  { href: '/dashboard/transcripts', label: 'Transcripts', icon: FileText },
-  { href: '/dashboard/grades', label: 'Grades', icon: GraduationCap },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: null },
+  { href: '/dashboard/students', label: 'Students', icon: Users, roles: null },
+  { href: '/dashboard/courses', label: 'Courses', icon: BookOpen, roles: null },
+  { href: '/dashboard/transcripts', label: 'Transcripts', icon: FileText, roles: null },
+  { href: '/dashboard/grades', label: 'Grades', icon: GraduationCap, roles: null },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useAuth();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   async function handleLogout() {
     try {
       await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
-      window.location.href = '/login';
     } catch {
-      window.location.href = '/login';
+      // Continue with logout even if request fails
     }
+    router.push('/login');
+    router.refresh();
   }
+
+  const userRole = user?.roles?.[0] || 'User';
+  const userName = user?.name || 'User';
 
   return (
     <>
@@ -84,6 +91,7 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 onClick={() => setMobileOpen(false)}
                 className={`
                   flex items-center gap-2.5 px-3 py-2 text-sm rounded-sm transition-colors
@@ -102,6 +110,10 @@ export function Sidebar() {
 
         {/* Footer */}
         <div className="p-2 border-t border-border">
+          <div className="px-3 py-2 mb-1">
+            <p className="text-sm font-medium truncate">{userName}</p>
+            <p className="text-xs text-muted-foreground">{userRole}</p>
+          </div>
           <button
             onClick={handleLogout}
             className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-muted-foreground hover:text-destructive rounded-sm transition-colors"

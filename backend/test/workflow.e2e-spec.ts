@@ -2,7 +2,12 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { cleanupDatabase, createTestUser, loginAs, createTestApp } from './test-utils';
+import {
+  cleanupDatabase,
+  createTestUser,
+  loginAs,
+  createTestApp,
+} from './test-utils';
 import { Role, GradeStatus } from '@prisma/client';
 
 describe('CTMS Workflow (e2e)', () => {
@@ -52,13 +57,24 @@ describe('CTMS Workflow (e2e)', () => {
     });
 
     adminAgent = await loginAs(app, 'admin@workflow.test', 'AdminPass123!');
-    lecturerAgent = await loginAs(app, 'lecturer@workflow.test', 'LecturerPass123!');
-    examOfficerAgent = await loginAs(app, 'examofficer@workflow.test', 'ExamOfficerPass123!');
+    lecturerAgent = await loginAs(
+      app,
+      'lecturer@workflow.test',
+      'LecturerPass123!',
+    );
+    examOfficerAgent = await loginAs(
+      app,
+      'examofficer@workflow.test',
+      'ExamOfficerPass123!',
+    );
   });
 
   describe('Health Check', () => {
     it('should return hello world', () => {
-      return request(app.getHttpServer()).get('/').expect(200).expect('Hello World!');
+      return request(app.getHttpServer())
+        .get('/')
+        .expect(200)
+        .expect('Hello World!');
     });
   });
 
@@ -207,7 +223,9 @@ describe('CTMS Workflow (e2e)', () => {
 
       expect(transcriptResponse.body.student.id).toBe(studentId);
       expect(transcriptResponse.body.academicSessions).toHaveLength(1);
-      expect(transcriptResponse.body.academicSessions[0].semesters).toHaveLength(1);
+      expect(
+        transcriptResponse.body.academicSessions[0].semesters,
+      ).toHaveLength(1);
       expect(transcriptResponse.body.cgpa).toBe(5.0);
 
       // Step 10: Verify audit logs

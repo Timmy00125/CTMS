@@ -10,30 +10,8 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthService, AuthLoginResult } from './auth.service';
+import { RegisterDto, LoginDto } from './dto/auth.dto';
 import type { Response, Request } from 'express';
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
-
-export class RegisterDto {
-  @IsEmail()
-  email!: string;
-
-  @IsString()
-  @MinLength(6)
-  password!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  name!: string;
-}
-
-export class LoginDto {
-  @IsEmail()
-  email!: string;
-
-  @IsString()
-  @IsNotEmpty()
-  password!: string;
-}
 
 @Controller('auth')
 export class AuthController {

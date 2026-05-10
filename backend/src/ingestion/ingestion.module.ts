@@ -4,9 +4,10 @@ import { IngestionController } from './ingestion.controller';
 import { ValidationService } from './validation.service';
 import { SanitizationService } from './sanitization.service';
 import { PrismaModule } from '../prisma/prisma.module';
+import { AuditModule } from '../audit/audit.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, AuditModule],
   providers: [IngestionService, ValidationService, SanitizationService],
   controllers: [IngestionController],
   exports: [IngestionService],

@@ -2,7 +2,12 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { cleanupDatabase, createTestUser, loginAs, createTestApp } from './test-utils';
+import {
+  cleanupDatabase,
+  createTestUser,
+  loginAs,
+  createTestApp,
+} from './test-utils';
 import { Role } from '@prisma/client';
 
 describe('AuthController (e2e)', () => {
@@ -224,7 +229,9 @@ describe('AuthController (e2e)', () => {
 
       const refreshCookies = refreshResponse.headers['set-cookie'] as string[];
       expect(refreshCookies.some((c) => c.includes('access_token'))).toBe(true);
-      expect(refreshCookies.some((c) => c.includes('refresh_token'))).toBe(true);
+      expect(refreshCookies.some((c) => c.includes('refresh_token'))).toBe(
+        true,
+      );
     });
 
     it('should reject refresh without refresh token cookie', async () => {

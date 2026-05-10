@@ -1,36 +1,22 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { GradeStatus } from '@prisma/client';
-
-export interface GradeMapping {
-  gradeLetter: string;
-  gradePoints: number;
-}
-
-export interface BulkUploadResult {
-  created: number;
-  errors: { row: number; field?: string; message: string }[];
-}
+import { mapScoreToGrade } from '../common/utils/grade-mapping';
+import { BulkUploadResult } from '../common/dto/bulk-upload-result.dto';
+import {
+  AuditLogService,
+  AuditAction,
+  AuditResource,
+} from '../audit/audit-log.service';
 
 @Injectable()
 export class GradeService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(GradeService.name);
 
-  mapScoreToGrade(score: number): GradeMapping {
-    if (!Number.isInteger(score)) {
-      throw new BadRequestException('Score must be an integer');
-    }
-    if (score < 0 || score > 100) {
-      throw new BadRequestException('Score must be between 0 and 100');
-    }
-
-    if (score >= 70) return { gradeLetter: 'A', gradePoints: 5.0 };
-    if (score >= 60) return { gradeLetter: 'B', gradePoints: 4.0 };
-    if (score >= 50) return { gradeLetter: 'C', gradePoints: 3.0 };
-    if (score >= 45) return { gradeLetter: 'D', gradePoints: 2.0 };
-    if (score >= 40) return { gradeLetter: 'E', gradePoints: 1.0 };
-    return { gradeLetter: 'F', gradePoints: 0.0 };
-  }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditLogService: AuditLogService,
+  ) {}
 
   async submitGrade(
     dto: {
@@ -68,7 +54,7 @@ export class GradeService {
       throw new BadRequestException('Semester not found');
     }
 
-    const { gradeLetter, gradePoints } = this.mapScoreToGrade(dto.score);
+    const { gradeLetter, gradePoints } = mapScoreToGrade(dto.score);
 
     const grade = await this.prisma.grade.create({
       data: {
@@ -91,6 +77,17 @@ export class GradeService {
         reason: 'Initial grade submission',
       },
     });
+
+    await this.auditLogService.logGradeSubmission(
+      userId,
+      grade.id,
+      dto.studentId,
+      dto.courseId,
+    );
+
+    this.logger.log(
+      `Grade submitted: ${grade.id} for student ${dto.studentId} in course ${dto.courseId}`,
+    );
 
     return grade;
   }
@@ -155,7 +152,7 @@ export class GradeService {
           continue;
         }
 
-        const { gradeLetter, gradePoints } = this.mapScoreToGrade(dto.score);
+        const { gradeLetter, gradePoints } = mapScoreToGrade(dto.score);
 
         const grade = await this.prisma.grade.create({
           data: {
@@ -197,10 +194,23 @@ export class GradeService {
       }
     }
 
+    if (created > 0) {
+      await this.auditLogService.log(
+        userId,
+        AuditAction.BULK_UPLOAD,
+        AuditResource.Grade,
+        `Bulk submitted ${created} grades`,
+      );
+    }
+
+    this.logger.log(
+      `Bulk grade submission: ${created} created, ${errors.length} errors`,
+    );
+
     return { created, errors };
   }
 
-  async publishGrades(
+  async submitForApproval(
     courseId: string,
     semesterId: string,
     userId: string,
@@ -217,23 +227,67 @@ export class GradeService {
       return { updated: 0 };
     }
 
-    for (const grade of draftGrades) {
-      await this.prisma.grade.update({
-        where: { id: grade.id },
-        data: { status: GradeStatus.PUBLISHED },
-      });
-    }
+    const { count } = await this.prisma.grade.updateMany({
+      where: {
+        courseId,
+        semesterId,
+        status: GradeStatus.DRAFT,
+      },
+      data: { status: GradeStatus.PENDING_APPROVAL },
+    });
 
-    await this.prisma.systemAuditLog.create({
-      data: {
-        userId,
-        action: 'GRADE_PUBLICATION',
-        resource: 'Grade',
-        details: `Published ${draftGrades.length} grades for course ${courseId}, semester ${semesterId}`,
+    await this.auditLogService.log(
+      userId,
+      AuditAction.GRADE_SUBMISSION,
+      AuditResource.Grade,
+      `Submitted ${count} grades for approval for course ${courseId}, semester ${semesterId}`,
+    );
+
+    this.logger.log(
+      `Submitted ${count} grades for approval: course ${courseId}, semester ${semesterId}`,
+    );
+
+    return { updated: count };
+  }
+
+  async publishGrades(
+    courseId: string,
+    semesterId: string,
+    userId: string,
+  ): Promise<{ updated: number }> {
+    const pendingGrades = await this.prisma.grade.findMany({
+      where: {
+        courseId,
+        semesterId,
+        status: GradeStatus.PENDING_APPROVAL,
       },
     });
 
-    return { updated: draftGrades.length };
+    if (pendingGrades.length === 0) {
+      return { updated: 0 };
+    }
+
+    const { count } = await this.prisma.grade.updateMany({
+      where: {
+        courseId,
+        semesterId,
+        status: GradeStatus.PENDING_APPROVAL,
+      },
+      data: { status: GradeStatus.PUBLISHED },
+    });
+
+    await this.auditLogService.logGradePublication(
+      userId,
+      courseId,
+      semesterId,
+      count,
+    );
+
+    this.logger.log(
+      `Published ${count} grades: course ${courseId}, semester ${semesterId}`,
+    );
+
+    return { updated: count };
   }
 
   async amendGrade(
@@ -255,7 +309,7 @@ export class GradeService {
       throw new BadRequestException('Grade not found');
     }
 
-    const { gradeLetter, gradePoints } = this.mapScoreToGrade(dto.score);
+    const { gradeLetter, gradePoints } = mapScoreToGrade(dto.score);
 
     const updatedGrade = await this.prisma.grade.update({
       where: { id: gradeId },
@@ -276,14 +330,16 @@ export class GradeService {
       },
     });
 
-    await this.prisma.systemAuditLog.create({
-      data: {
-        userId,
-        action: 'GRADE_AMENDMENT',
-        resource: 'Grade',
-        details: `Amended grade ${gradeId}: score ${existingGrade.score} -> ${dto.score}`,
-      },
-    });
+    await this.auditLogService.logGradeAmendment(
+      userId,
+      gradeId,
+      existingGrade.score,
+      dto.score,
+    );
+
+    this.logger.log(
+      `Grade amended: ${gradeId}, score ${existingGrade.score} -> ${dto.score}`,
+    );
 
     return updatedGrade;
   }

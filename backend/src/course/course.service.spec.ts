@@ -41,7 +41,11 @@ describe('CourseService', () => {
           creditUnits: 3,
           departmentId: 'dept-cs-001',
           lecturerId: 'lecturer-1',
-          lecturer: { id: 'lecturer-1', name: 'Dr. Smith', email: 'smith@ctms.edu' },
+          lecturer: {
+            id: 'lecturer-1',
+            name: 'Dr. Smith',
+            email: 'smith@ctms.edu',
+          },
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -67,7 +71,11 @@ describe('CourseService', () => {
         creditUnits: 3,
         departmentId: 'dept-cs-001',
         lecturerId: 'lecturer-1',
-        lecturer: { id: 'lecturer-1', name: 'Dr. Smith', email: 'smith@ctms.edu' },
+        lecturer: {
+          id: 'lecturer-1',
+          name: 'Dr. Smith',
+          email: 'smith@ctms.edu',
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
       };

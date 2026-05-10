@@ -11,8 +11,6 @@ export class SanitizationService {
 
     sanitized = sanitized.replace(/on\w+\s*=/gi, '');
 
-    sanitized = sanitized.replace(/'/g, "''");
-
     sanitized = sanitized.trim();
 
     return sanitized;

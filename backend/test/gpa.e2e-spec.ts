@@ -56,7 +56,11 @@ describe('GpaController (e2e)', () => {
     });
 
     adminAgent = await loginAs(app, 'admin@gpa.test', 'AdminPass123!');
-    examOfficerAgent = await loginAs(app, 'examofficer@gpa.test', 'ExamOfficerPass123!');
+    examOfficerAgent = await loginAs(
+      app,
+      'examofficer@gpa.test',
+      'ExamOfficerPass123!',
+    );
     lecturerAgent = await loginAs(app, 'lecturer@gpa.test', 'LecturerPass123!');
   });
 
@@ -83,7 +87,9 @@ describe('GpaController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -116,15 +122,21 @@ describe('GpaController (e2e)', () => {
       expect(response.body.semesterId).toBe(semester.id);
       expect(response.body.results).toHaveLength(2);
 
-      const result1 = response.body.results.find((r: any) => r.studentId === student1.id);
-      const result2 = response.body.results.find((r: any) => r.studentId === student2.id);
+      const result1 = response.body.results.find(
+        (r: any) => r.studentId === student1.id,
+      );
+      const result2 = response.body.results.find(
+        (r: any) => r.studentId === student2.id,
+      );
 
       expect(result1.gpa).toBe(5.0);
       expect(result2.gpa).toBe(5.0);
     });
 
     it('should return empty results for empty studentIds array', async () => {
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -176,7 +188,9 @@ describe('GpaController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -206,7 +220,9 @@ describe('GpaController (e2e)', () => {
         })
         .expect(201);
 
-      const result = response.body.results.find((r: any) => r.studentId === student.id);
+      const result = response.body.results.find(
+        (r: any) => r.studentId === student.id,
+      );
 
       // (3*5 + 4*4) / 7 = (15 + 16) / 7 = 31/7 = 4.428571... rounded to 4.43
       expect(result.gpa).toBe(4.43);
@@ -228,7 +244,9 @@ describe('GpaController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -250,7 +268,9 @@ describe('GpaController (e2e)', () => {
         })
         .expect(201);
 
-      const result = response.body.results.find((r: any) => r.studentId === student.id);
+      const result = response.body.results.find(
+        (r: any) => r.studentId === student.id,
+      );
       expect(result.gpa).toBeNull();
       expect(result.totalCreditUnits).toBe(0);
     });
@@ -286,7 +306,9 @@ describe('GpaController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -335,9 +357,7 @@ describe('GpaController (e2e)', () => {
     });
 
     it('should reject access by lecturer', async () => {
-      await lecturerAgent
-        .post('/gpa/calculate/student/some-id')
-        .expect(403);
+      await lecturerAgent.post('/gpa/calculate/student/some-id').expect(403);
     });
   });
 
@@ -357,7 +377,9 @@ describe('GpaController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -428,7 +450,9 @@ describe('GpaController (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -465,7 +489,9 @@ describe('GpaController (e2e)', () => {
     });
 
     it('should reject access by lecturer', async () => {
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,

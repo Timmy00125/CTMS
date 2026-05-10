@@ -100,6 +100,18 @@ export class GpaService {
     };
   }
 
+  async getStudentIdsForSemester(semesterId: string): Promise<string[]> {
+    const grades = await this.prisma.grade.findMany({
+      where: {
+        semesterId,
+        status: GradeStatus.PUBLISHED,
+      },
+      select: { studentId: true },
+      distinct: ['studentId'],
+    });
+    return grades.map((g) => g.studentId);
+  }
+
   async calculateBatchGpa(
     studentIds: string[],
     semesterId: string,

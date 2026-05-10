@@ -56,8 +56,16 @@ describe('Audit Logging (e2e)', () => {
     });
 
     adminAgent = await loginAs(app, 'admin@audit.test', 'AdminPass123!');
-    lecturerAgent = await loginAs(app, 'lecturer@audit.test', 'LecturerPass123!');
-    examOfficerAgent = await loginAs(app, 'examofficer@audit.test', 'ExamOfficerPass123!');
+    lecturerAgent = await loginAs(
+      app,
+      'lecturer@audit.test',
+      'LecturerPass123!',
+    );
+    examOfficerAgent = await loginAs(
+      app,
+      'examofficer@audit.test',
+      'ExamOfficerPass123!',
+    );
   });
 
   describe('Grade Audit Logs', () => {
@@ -76,7 +84,9 @@ describe('Audit Logging (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -119,7 +129,9 @@ describe('Audit Logging (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -168,7 +180,9 @@ describe('Audit Logging (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -203,7 +217,12 @@ describe('Audit Logging (e2e)', () => {
       await adminAgent
         .post('/ingestion/students')
         .send([
-          { matriculationNo: 'MAT/004', name: 'Bulk Student', departmentId: 'CS', level: 100 },
+          {
+            matriculationNo: 'MAT/004',
+            name: 'Bulk Student',
+            departmentId: 'CS',
+            level: 100,
+          },
         ])
         .expect(201);
 
@@ -219,7 +238,12 @@ describe('Audit Logging (e2e)', () => {
       await adminAgent
         .post('/ingestion/courses')
         .send([
-          { code: 'CSC104', title: 'Bulk Course', creditUnits: 3, departmentId: 'CS' },
+          {
+            code: 'CSC104',
+            title: 'Bulk Course',
+            creditUnits: 3,
+            departmentId: 'CS',
+          },
         ])
         .expect(201);
 
@@ -245,7 +269,9 @@ describe('Audit Logging (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -290,7 +316,9 @@ describe('Audit Logging (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -332,7 +360,9 @@ describe('Audit Logging (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -382,7 +412,9 @@ describe('Audit Logging (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -419,7 +451,9 @@ describe('Audit Logging (e2e)', () => {
 
       // Verify timestamps are in ascending order
       for (let i = 1; i < auditLogs.length; i++) {
-        expect(new Date(auditLogs[i].timestamp).getTime()).toBeGreaterThanOrEqual(
+        expect(
+          new Date(auditLogs[i].timestamp).getTime(),
+        ).toBeGreaterThanOrEqual(
           new Date(auditLogs[i - 1].timestamp).getTime(),
         );
       }
@@ -440,7 +474,9 @@ describe('Audit Logging (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,

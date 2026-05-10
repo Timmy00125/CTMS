@@ -13,11 +13,16 @@ describe('AcademicSessionController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AcademicSessionController],
       providers: [
-        { provide: AcademicSessionService, useValue: mockAcademicSessionService },
+        {
+          provide: AcademicSessionService,
+          useValue: mockAcademicSessionService,
+        },
       ],
     }).compile();
 
-    controller = module.get<AcademicSessionController>(AcademicSessionController);
+    controller = module.get<AcademicSessionController>(
+      AcademicSessionController,
+    );
   });
 
   afterEach(() => {
@@ -38,8 +43,18 @@ describe('AcademicSessionController', () => {
           endDate: new Date('2024-06-30'),
           isActive: false,
           semesters: [
-            { id: 's1', name: 'First Semester', academicSessionId: '1', isActive: false },
-            { id: 's2', name: 'Second Semester', academicSessionId: '1', isActive: false },
+            {
+              id: 's1',
+              name: 'First Semester',
+              academicSessionId: '1',
+              isActive: false,
+            },
+            {
+              id: 's2',
+              name: 'Second Semester',
+              academicSessionId: '1',
+              isActive: false,
+            },
           ],
         },
       ];

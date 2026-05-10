@@ -65,8 +65,16 @@ describe('Roles and Permissions (e2e)', () => {
     });
 
     adminAgent = await loginAs(app, 'admin@roles.test', 'AdminPass123!');
-    lecturerAgent = await loginAs(app, 'lecturer@roles.test', 'LecturerPass123!');
-    examOfficerAgent = await loginAs(app, 'examofficer@roles.test', 'ExamOfficerPass123!');
+    lecturerAgent = await loginAs(
+      app,
+      'lecturer@roles.test',
+      'LecturerPass123!',
+    );
+    examOfficerAgent = await loginAs(
+      app,
+      'examofficer@roles.test',
+      'ExamOfficerPass123!',
+    );
     noRoleAgent = await loginAs(app, 'norole@roles.test', 'NoRolePass123!');
   });
 
@@ -75,7 +83,12 @@ describe('Roles and Permissions (e2e)', () => {
       await adminAgent
         .post('/ingestion/students')
         .send([
-          { matriculationNo: 'MAT/001', name: 'Test', departmentId: 'CS', level: 100 },
+          {
+            matriculationNo: 'MAT/001',
+            name: 'Test',
+            departmentId: 'CS',
+            level: 100,
+          },
         ])
         .expect(201);
     });
@@ -104,7 +117,9 @@ describe('Roles and Permissions (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -136,7 +151,9 @@ describe('Roles and Permissions (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -157,7 +174,9 @@ describe('Roles and Permissions (e2e)', () => {
     });
 
     it('should allow admin to calculate GPA', async () => {
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -195,7 +214,9 @@ describe('Roles and Permissions (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -233,7 +254,9 @@ describe('Roles and Permissions (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -265,7 +288,9 @@ describe('Roles and Permissions (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -311,7 +336,12 @@ describe('Roles and Permissions (e2e)', () => {
       await lecturerAgent
         .post('/ingestion/students')
         .send([
-          { matriculationNo: 'MAT/010', name: 'Test', departmentId: 'CS', level: 100 },
+          {
+            matriculationNo: 'MAT/010',
+            name: 'Test',
+            departmentId: 'CS',
+            level: 100,
+          },
         ])
         .expect(403);
     });
@@ -368,7 +398,9 @@ describe('Roles and Permissions (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -394,7 +426,9 @@ describe('Roles and Permissions (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -415,7 +449,9 @@ describe('Roles and Permissions (e2e)', () => {
     });
 
     it('should allow exam officer to calculate GPA', async () => {
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -453,7 +489,9 @@ describe('Roles and Permissions (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,
@@ -474,7 +512,12 @@ describe('Roles and Permissions (e2e)', () => {
       await examOfficerAgent
         .post('/ingestion/students')
         .send([
-          { matriculationNo: 'MAT/015', name: 'Test', departmentId: 'CS', level: 100 },
+          {
+            matriculationNo: 'MAT/015',
+            name: 'Test',
+            departmentId: 'CS',
+            level: 100,
+          },
         ])
         .expect(403);
     });
@@ -532,7 +575,12 @@ describe('Roles and Permissions (e2e)', () => {
       await noRoleAgent
         .post('/ingestion/students')
         .send([
-          { matriculationNo: 'MAT/016', name: 'Test', departmentId: 'CS', level: 100 },
+          {
+            matriculationNo: 'MAT/016',
+            name: 'Test',
+            departmentId: 'CS',
+            level: 100,
+          },
         ])
         .expect(403);
     });
@@ -544,7 +592,9 @@ describe('Roles and Permissions (e2e)', () => {
     });
 
     it('should reject unauthenticated access to grades', async () => {
-      await request(app.getHttpServer()).get('/grades/student/some-id').expect(401);
+      await request(app.getHttpServer())
+        .get('/grades/student/some-id')
+        .expect(401);
     });
 
     it('should reject unauthenticated access to GPA calculations', async () => {
@@ -562,17 +612,26 @@ describe('Roles and Permissions (e2e)', () => {
       await request(app.getHttpServer())
         .post('/ingestion/students')
         .send([
-          { matriculationNo: 'MAT/017', name: 'Test', departmentId: 'CS', level: 100 },
+          {
+            matriculationNo: 'MAT/017',
+            name: 'Test',
+            departmentId: 'CS',
+            level: 100,
+          },
         ])
         .expect(401);
     });
 
     it('should reject unauthenticated access to grade audit logs', async () => {
-      await request(app.getHttpServer()).get('/grades/some-id/audit').expect(401);
+      await request(app.getHttpServer())
+        .get('/grades/some-id/audit')
+        .expect(401);
     });
 
     it('should return standardized error for unauthenticated access', async () => {
-      const response = await request(app.getHttpServer()).get('/students').expect(401);
+      const response = await request(app.getHttpServer())
+        .get('/students')
+        .expect(401);
 
       expect(response.body).toHaveProperty('statusCode', 401);
       expect(response.body).toHaveProperty('message');
@@ -594,7 +653,11 @@ describe('Roles and Permissions (e2e)', () => {
         roles: [Role.Lecturer, Role.ExamOfficer],
       });
 
-      const multiAgent = await loginAs(app, 'multi@roles.test', 'MultiPass123!');
+      const multiAgent = await loginAs(
+        app,
+        'multi@roles.test',
+        'MultiPass123!',
+      );
 
       const student = await createStudent(prisma, {
         matriculationNo: 'MAT/018',
@@ -610,7 +673,9 @@ describe('Roles and Permissions (e2e)', () => {
         departmentId: 'CS',
       });
 
-      const session = await createAcademicSession(prisma, { name: '2023/2024' });
+      const session = await createAcademicSession(prisma, {
+        name: '2023/2024',
+      });
       const semester = await createSemester(prisma, {
         name: 'First Semester',
         academicSessionId: session.id,

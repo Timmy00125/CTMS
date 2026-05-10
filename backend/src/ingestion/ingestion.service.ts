@@ -1,19 +1,19 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ValidationService } from './validation.service';
 import { SanitizationService } from './sanitization.service';
-
-export interface BulkUploadResult {
-  created: number;
-  errors: { row: number; field?: string; message: string }[];
-}
+import { BulkUploadResult } from '../common/dto/bulk-upload-result.dto';
+import { AuditLogService, AuditResource } from '../audit/audit-log.service';
 
 @Injectable()
 export class IngestionService {
+  private readonly logger = new Logger(IngestionService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly validationService: ValidationService,
     private readonly sanitizationService: SanitizationService,
+    private readonly auditLogService: AuditLogService,
   ) {}
 
   async bulkUploadStudents(
@@ -79,14 +79,12 @@ export class IngestionService {
     }
 
     if (created > 0) {
-      await this.prisma.systemAuditLog.create({
-        data: {
-          userId,
-          action: 'BULK_UPLOAD',
-          resource: 'Student',
-          details: `Bulk uploaded ${created} students`,
-        },
-      });
+      await this.auditLogService.logBulkUpload(
+        userId,
+        AuditResource.Student,
+        created,
+      );
+      this.logger.log(`Bulk uploaded ${created} students by user ${userId}`);
     }
 
     return { created, errors: [...errors, ...dbErrors] };
@@ -155,14 +153,12 @@ export class IngestionService {
     }
 
     if (created > 0) {
-      await this.prisma.systemAuditLog.create({
-        data: {
-          userId,
-          action: 'BULK_UPLOAD',
-          resource: 'Course',
-          details: `Bulk uploaded ${created} courses`,
-        },
-      });
+      await this.auditLogService.logBulkUpload(
+        userId,
+        AuditResource.Course,
+        created,
+      );
+      this.logger.log(`Bulk uploaded ${created} courses by user ${userId}`);
     }
 
     return { created, errors: [...errors, ...dbErrors] };

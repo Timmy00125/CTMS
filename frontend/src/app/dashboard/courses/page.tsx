@@ -5,40 +5,13 @@ import { AppShell } from '@/components/layout/app-shell';
 import { SectionHeader } from '@/components/ui/section-header';
 import { SearchInput } from '@/components/ui/search-input';
 import { DataTable } from '@/components/ui/data-table';
+import { useCourses } from '@/lib/hooks/use-data';
 import { Course } from '@/lib/api';
-import { Loader2 } from 'lucide-react';
-
-const mockCourses: Course[] = [
-  { id: '1', code: 'CSC 101', title: 'Introduction to Programming', creditUnits: 3, departmentId: 'CSC', lecturerId: '1', lecturer: { id: '1', name: 'Dr. Smith', email: 'smith@uni.edu' }, createdAt: '2023-01-01', updatedAt: '2023-01-01' },
-  { id: '2', code: 'CSC 102', title: 'Data Structures and Algorithms', creditUnits: 3, departmentId: 'CSC', lecturerId: '1', lecturer: { id: '1', name: 'Dr. Smith', email: 'smith@uni.edu' }, createdAt: '2023-01-01', updatedAt: '2023-01-01' },
-  { id: '3', code: 'MAT 101', title: 'Calculus I', creditUnits: 3, departmentId: 'MAT', lecturerId: '2', lecturer: { id: '2', name: 'Dr. Jones', email: 'jones@uni.edu' }, createdAt: '2023-01-01', updatedAt: '2023-01-01' },
-  { id: '4', code: 'MAT 201', title: 'Linear Algebra', creditUnits: 3, departmentId: 'MAT', lecturerId: '2', lecturer: { id: '2', name: 'Dr. Jones', email: 'jones@uni.edu' }, createdAt: '2023-01-01', updatedAt: '2023-01-01' },
-  { id: '5', code: 'PHY 101', title: 'General Physics I', creditUnits: 2, departmentId: 'PHY', lecturerId: '3', lecturer: { id: '3', name: 'Dr. Brown', email: 'brown@uni.edu' }, createdAt: '2023-01-01', updatedAt: '2023-01-01' },
-  { id: '6', code: 'PHY 102', title: 'General Physics II', creditUnits: 2, departmentId: 'PHY', lecturerId: '3', lecturer: { id: '3', name: 'Dr. Brown', email: 'brown@uni.edu' }, createdAt: '2023-01-01', updatedAt: '2023-01-01' },
-  { id: '7', code: 'CHM 101', title: 'General Chemistry I', creditUnits: 2, departmentId: 'CHM', lecturerId: '4', lecturer: { id: '4', name: 'Dr. Wilson', email: 'wilson@uni.edu' }, createdAt: '2023-01-01', updatedAt: '2023-01-01' },
-  { id: '8', code: 'CHM 102', title: 'General Chemistry II', creditUnits: 2, departmentId: 'CHM', lecturerId: '4', lecturer: { id: '4', name: 'Dr. Wilson', email: 'wilson@uni.edu' }, createdAt: '2023-01-01', updatedAt: '2023-01-01' },
-];
+import { Loader2, AlertCircle } from 'lucide-react';
 
 export default function CoursesPage() {
   const [search, setSearch] = React.useState('');
-  const [loading, setLoading] = React.useState(true);
-  const [courses, setCourses] = React.useState<Course[]>(mockCourses);
-
-  React.useEffect(() => {
-    let cancelled = false;
-    fetch('/courses', { credentials: 'include' })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (!cancelled && data && Array.isArray(data) && data.length > 0) {
-          setCourses(data);
-        }
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, []);
+  const { data: courses, loading, error, refetch } = useCourses();
 
   const filtered = React.useMemo(() => {
     const q = search.toLowerCase();
@@ -113,6 +86,17 @@ export default function CoursesPage() {
         <div className="flex items-center justify-center py-16">
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           <span className="ml-2 text-sm text-muted-foreground">Loading courses...</span>
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center py-16 gap-4">
+          <AlertCircle className="w-8 h-8 text-destructive" />
+          <p className="text-sm text-destructive">{error}</p>
+          <button
+            onClick={() => refetch()}
+            className="text-sm text-muted-foreground hover:text-foreground underline"
+          >
+            Try again
+          </button>
         </div>
       ) : (
         <DataTable
