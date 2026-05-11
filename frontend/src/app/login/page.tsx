@@ -30,7 +30,9 @@ export default function LoginPage() {
         throw new Error(data.message || 'Invalid credentials');
       }
 
-      router.push('/dashboard');
+      const data = await res.json().catch(() => ({}));
+      const isStudent = data.user?.roles?.includes('Student');
+      router.push(isStudent ? '/dashboard/student' : '/dashboard');
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');

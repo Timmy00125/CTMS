@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GradeController } from './grade.controller';
 import { GradeService } from './grade.service';
+import { StudentService } from '../student/student.service';
 import { BadRequestException } from '@nestjs/common';
 import { GradeStatus, Role } from '@prisma/client';
 
@@ -14,13 +15,20 @@ const mockGradeService = {
   getGradeAuditLog: jest.fn(),
 };
 
+const mockStudentService = {
+  findByUserId: jest.fn(),
+};
+
 describe('GradeController', () => {
   let controller: GradeController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [GradeController],
-      providers: [{ provide: GradeService, useValue: mockGradeService }],
+      providers: [
+        { provide: GradeService, useValue: mockGradeService },
+        { provide: StudentService, useValue: mockStudentService },
+      ],
     }).compile();
 
     controller = module.get<GradeController>(GradeController);

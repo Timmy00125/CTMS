@@ -7,7 +7,8 @@ import {
   Body,
   UseGuards,
 } from '@nestjs/common';
-import { UserService, UpdateUserDto } from './user.service';
+import { UserService } from './user.service';
+import type { UpdateUserDto } from './user.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';

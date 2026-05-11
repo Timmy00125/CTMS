@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GpaController } from './gpa.controller';
 import { GpaService } from './gpa.service';
+import { StudentService } from '../student/student.service';
 import { BadRequestException } from '@nestjs/common';
 import { Role } from '@prisma/client';
 
@@ -9,6 +10,11 @@ const mockGpaService = {
   calculateCgpa: jest.fn(),
   calculateSessionCgpa: jest.fn(),
   calculateBatchGpa: jest.fn(),
+  getStudentIdsForSemester: jest.fn(),
+};
+
+const mockStudentService = {
+  findByUserId: jest.fn(),
 };
 
 describe('GpaController', () => {
@@ -17,7 +23,10 @@ describe('GpaController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [GpaController],
-      providers: [{ provide: GpaService, useValue: mockGpaService }],
+      providers: [
+        { provide: GpaService, useValue: mockGpaService },
+        { provide: StudentService, useValue: mockStudentService },
+      ],
     }).compile();
 
     controller = module.get<GpaController>(GpaController);

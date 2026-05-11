@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AppShell } from '@/components/layout/app-shell';
 import { StatCard } from '@/components/ui/stat-card';
 import { SectionHeader } from '@/components/ui/section-header';
@@ -17,9 +18,16 @@ import {
 } from 'lucide-react';
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, isStudent } = useAuth();
+  const router = useRouter();
   const { data: students, loading: studentsLoading } = useStudents();
   const { data: courses, loading: coursesLoading } = useCourses();
+
+  React.useEffect(() => {
+    if (isStudent) {
+      router.replace('/dashboard/student');
+    }
+  }, [isStudent, router]);
 
   const loading = studentsLoading || coursesLoading;
 

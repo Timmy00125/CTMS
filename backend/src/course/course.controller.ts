@@ -8,8 +8,8 @@ import {
   Body,
   UseGuards,
 } from '@nestjs/common';
-import {
-  CourseService,
+import { CourseService } from './course.service';
+import type {
   CreateCourseDto,
   UpdateCourseDto,
 } from './course.service';

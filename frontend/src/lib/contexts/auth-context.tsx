@@ -10,6 +10,7 @@ interface AuthContextType {
   isAdmin: boolean;
   isLecturer: boolean;
   isExamOfficer: boolean;
+  isStudent: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,9 +48,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAdmin = user?.roles?.includes('Admin') ?? false;
   const isLecturer = user?.roles?.includes('Lecturer') ?? false;
   const isExamOfficer = user?.roles?.includes('ExamOfficer') ?? false;
+  const isStudent = user?.roles?.includes('Student') ?? false;
 
   return (
-    <AuthContext.Provider value={{ user, loading, refreshUser, isAdmin, isLecturer, isExamOfficer }}>
+    <AuthContext.Provider value={{ user, loading, refreshUser, isAdmin, isLecturer, isExamOfficer, isStudent }}>
       {children}
     </AuthContext.Provider>
   );

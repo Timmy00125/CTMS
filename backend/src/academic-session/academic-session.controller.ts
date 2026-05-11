@@ -8,8 +8,8 @@ import {
   Body,
   UseGuards,
 } from '@nestjs/common';
-import {
-  AcademicSessionService,
+import { AcademicSessionService } from './academic-session.service';
+import type {
   CreateAcademicSessionDto,
   UpdateAcademicSessionDto,
 } from './academic-session.service';

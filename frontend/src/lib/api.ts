@@ -63,7 +63,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  roles: ('Admin' | 'Lecturer' | 'ExamOfficer')[];
+  roles: ('Admin' | 'Lecturer' | 'ExamOfficer' | 'Student')[];
   departmentId?: string;
 }
 
@@ -169,9 +169,35 @@ export async function fetchStudentTranscript(studentId: string): Promise<Transcr
   return apiFetch<TranscriptData>(`/transcript/${studentId}`);
 }
 
+export async function fetchStudentTranscriptMe(): Promise<TranscriptData> {
+  return apiFetch<TranscriptData>('/transcript/me');
+}
+
 // Grades
 export async function fetchStudentGrades(studentId: string): Promise<Grade[]> {
   return apiFetch<Grade[]>(`/grades/student/${studentId}`);
+}
+
+export async function fetchStudentGradesMe(): Promise<Grade[]> {
+  return apiFetch<Grade[]>('/grades/me');
+}
+
+// Student Profile
+export async function fetchStudentMe(): Promise<Student> {
+  return apiFetch<Student>('/students/me');
+}
+
+// GPA
+export async function fetchStudentGpaMe(semesterId?: string): Promise<{
+  studentId: string;
+  semesterId?: string;
+  gpa: number | null;
+  cgpa: number | null;
+  totalCreditUnits: number;
+  totalGradePoints: number;
+}> {
+  const query = semesterId ? `?semesterId=${semesterId}` : '';
+  return apiFetch(`/gpa/me${query}`);
 }
 
 export async function fetchCourseGrades(courseId: string, semesterId: string): Promise<Grade[]> {

@@ -12,22 +12,32 @@ import {
   LogOut,
   Menu,
   X,
+  UserCircle,
 } from 'lucide-react';
 import { useAuth } from '@/lib/contexts/auth-context';
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: null },
-  { href: '/dashboard/students', label: 'Students', icon: Users, roles: null },
-  { href: '/dashboard/courses', label: 'Courses', icon: BookOpen, roles: null },
-  { href: '/dashboard/transcripts', label: 'Transcripts', icon: FileText, roles: null },
-  { href: '/dashboard/grades', label: 'Grades', icon: GraduationCap, roles: null },
+const staffNavItems = [
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard/students', label: 'Students', icon: Users },
+  { href: '/dashboard/courses', label: 'Courses', icon: BookOpen },
+  { href: '/dashboard/transcripts', label: 'Transcripts', icon: FileText },
+  { href: '/dashboard/grades', label: 'Grades', icon: GraduationCap },
+];
+
+const studentNavItems = [
+  { href: '/dashboard/student', label: 'My Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard/student/grades', label: 'My Grades', icon: GraduationCap },
+  { href: '/dashboard/student/transcript', label: 'My Transcript', icon: FileText },
+  { href: '/dashboard/student/profile', label: 'My Profile', icon: UserCircle },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isStudent } = useAuth();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const navItems = isStudent ? studentNavItems : staffNavItems;
 
   async function handleLogout() {
     try {

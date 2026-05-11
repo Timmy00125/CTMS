@@ -8,8 +8,10 @@ import {
   UseGuards,
   Request,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { GradeService } from './grade.service';
+import { StudentService } from '../student/student.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -26,7 +28,10 @@ interface RequestWithUser {
 @Controller('grades')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class GradeController {
-  constructor(private readonly gradeService: GradeService) {}
+  constructor(
+    private readonly gradeService: GradeService,
+    private readonly studentService: StudentService,
+  ) {}
 
   @Post()
   @Roles(Role.Lecturer, Role.Admin)
@@ -83,6 +88,16 @@ export class GradeController {
     @Request() req: RequestWithUser,
   ) {
     return this.gradeService.amendGrade(id, dto, req.user.sub);
+  }
+
+  @Get('me')
+  @Roles(Role.Student)
+  async getMyGrades(@Request() req: RequestWithUser) {
+    const student = await this.studentService.findByUserId(req.user.sub);
+    if (!student) {
+      throw new NotFoundException('Student profile not found for this user');
+    }
+    return this.gradeService.getGradesForStudent(student.id);
   }
 
   @Get('student/:studentId')

@@ -6,19 +6,30 @@ import {
   Param,
   Query,
   UseGuards,
+  Request,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { GpaService } from './gpa.service';
+import { StudentService } from '../student/student.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { CalculateSemesterGpaDto } from './dto/calculate-gpa.dto';
+import { TokenPayload } from '../auth/auth.service';
+
+interface RequestWithUser {
+  user: TokenPayload;
+}
 
 @Controller('gpa')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class GpaController {
-  constructor(private readonly gpaService: GpaService) {}
+  constructor(
+    private readonly gpaService: GpaService,
+    private readonly studentService: StudentService,
+  ) {}
 
   @Post('calculate/semester')
   @Roles(Role.ExamOfficer, Role.Admin)
@@ -54,6 +65,34 @@ export class GpaController {
     return {
       studentId,
       ...result,
+    };
+  }
+
+  @Get('me')
+  @Roles(Role.Student)
+  async getMyGpa(@Request() req: RequestWithUser, @Query('semesterId') semesterId?: string) {
+    const student = await this.studentService.findByUserId(req.user.sub);
+    if (!student) {
+      throw new NotFoundException('Student profile not found for this user');
+    }
+    const [gpaResult, cgpaResult] = await Promise.all([
+      semesterId
+        ? this.gpaService.calculateSemesterGpa(student.id, semesterId)
+        : Promise.resolve({
+            gpa: null,
+            totalCreditUnits: 0,
+            totalGradePoints: 0,
+          }),
+      this.gpaService.calculateCgpa(student.id),
+    ]);
+
+    return {
+      studentId: student.id,
+      semesterId,
+      gpa: gpaResult.gpa,
+      cgpa: cgpaResult.cgpa,
+      totalCreditUnits: cgpaResult.totalCreditUnits,
+      totalGradePoints: cgpaResult.totalGradePoints,
     };
   }
 

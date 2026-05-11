@@ -282,6 +282,36 @@ async function main() {
   const phyStudents = students.filter((s) => s.departmentId === DEPT_PHY);
   const statStudents = students.filter((s) => s.departmentId === DEPT_STAT);
 
+  // Create student user accounts and link to students
+  console.log('👤 Creating Student User Accounts...');
+  const studentUsersData = [
+    { email: 'student.cs@ctms.edu', name: csStudents[0].name, student: csStudents[0] },
+    { email: 'student.math@ctms.edu', name: mathStudents[0].name, student: mathStudents[0] },
+    { email: 'student.phy@ctms.edu', name: phyStudents[0].name, student: phyStudents[0] },
+    { email: 'student.stat@ctms.edu', name: statStudents[0].name, student: statStudents[0] },
+    { email: 'student2.cs@ctms.edu', name: csStudents[1].name, student: csStudents[1] },
+    { email: 'student2.math@ctms.edu', name: mathStudents[1].name, student: mathStudents[1] },
+  ];
+
+  const studentUsers = [];
+  for (const su of studentUsersData) {
+    const user = await prisma.user.create({
+      data: {
+        email: su.email,
+        passwordHash: hashedPassword,
+        name: su.name,
+        roles: ['Student'],
+        departmentId: su.student.departmentId,
+      },
+    });
+    await prisma.student.update({
+      where: { id: su.student.id },
+      data: { userId: user.id },
+    });
+    studentUsers.push(user);
+  }
+  console.log(`   ✅ Created ${studentUsers.length} student user accounts\n`);
+
   console.log(`   ✅ Created ${students.length} students`);
   console.log(`      - CS: ${csStudents.length}, Math: ${mathStudents.length}, Physics: ${phyStudents.length}, Stats: ${statStudents.length}\n`);
 
@@ -656,7 +686,7 @@ async function main() {
   console.log('═══════════════════════════════════════════════════════════════');
   console.log('');
   console.log('📊 Data Summary:');
-  console.log(`   Users:              ${users.length}`);
+  console.log(`   Users:              ${users.length + studentUsers.length}`);
   console.log(`   Students:           ${students.length}`);
   console.log(`   Courses:            ${courses.length}`);
   console.log(`   Academic Sessions:  ${sessions.length}`);
@@ -678,6 +708,10 @@ async function main() {
   console.log('   Lecturer MA:     lecturer6@ctms.edu');
   console.log('   Multi Admin:     multiadmin@ctms.edu');
   console.log('   Multi Officer:   multiofficer@ctms.edu');
+  console.log('   Student CS:      student.cs@ctms.edu');
+  console.log('   Student MATH:    student.math@ctms.edu');
+  console.log('   Student PHY:     student.phy@ctms.edu');
+  console.log('   Student STAT:    student.stat@ctms.edu');
   console.log('');
   console.log('📁 Departments:');
   console.log(`   CS:     ${DEPT_CS}`);

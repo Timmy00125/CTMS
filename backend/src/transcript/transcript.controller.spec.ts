@@ -1,10 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TranscriptController } from './transcript.controller';
 import { TranscriptService } from './transcript.service';
+import { StudentService } from '../student/student.service';
 import { Role, GradeStatus } from '@prisma/client';
 
 const mockTranscriptService = {
   getStudentTranscript: jest.fn(),
+};
+
+const mockStudentService = {
+  findByUserId: jest.fn(),
 };
 
 describe('TranscriptController', () => {
@@ -15,6 +20,7 @@ describe('TranscriptController', () => {
       controllers: [TranscriptController],
       providers: [
         { provide: TranscriptService, useValue: mockTranscriptService },
+        { provide: StudentService, useValue: mockStudentService },
       ],
     }).compile();
 
