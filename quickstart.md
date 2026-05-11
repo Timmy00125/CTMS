@@ -70,12 +70,16 @@ All seeded accounts use the same password: **`password123`**
 | **Lecturer** | `lecturer12@ctms.edu` | Statistics |
 | **Admin + Lecturer** | `multiadmin@ctms.edu` | CS |
 | **Exam Officer + Lecturer** | `multiofficer@ctms.edu` | Math |
+| **Student** | `student.cs@ctms.edu` | CS |
+| **Student** | `student.math@ctms.edu` | Math |
+| **Student** | `student.phy@ctms.edu` | Physics |
+| **Student** | `student.stat@ctms.edu` | Statistics |
 
 ### Seeded Data Overview
 
 Running `npx prisma db seed` creates the following demo data:
 
-- **20 users** (3 admins, 5 exam officers, 14 lecturers)
+- **26 users** (3 admins, 5 exam officers, 14 lecturers, 4 students)
 - **120 students** (30 per department)
 - **38 courses** across 4 departments
 - **4 academic sessions** (2021/2022 through 2024/2025)
@@ -130,5 +134,6 @@ npx prisma studio         # Open Prisma Studio
 
 - **Port mapping:** The backend runs on `3001` and the frontend dev server runs on `3000`. The frontend's `next.config.ts` proxies API requests to the backend automatically.
 - **CORS:** The backend is configured to accept requests from `http://localhost:3000` and `http://localhost:3001`.
+- **Student login:** Students logging in with a `Student` role are redirected to `/dashboard/student` where they can view their grades, transcript, and profile.
 - **New registrations:** Users created via `/register` have no roles assigned by default and cannot access admin/lecturer/exam-officer features. Use the seeded accounts above for full access.
 - **Re-seeding:** `npx prisma db seed` wipes all existing data and recreates it from scratch.
