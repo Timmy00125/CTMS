@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ForbiddenException } from '@nestjs/common';
 import { TranscriptController } from './transcript.controller';
 import { TranscriptService } from './transcript.service';
 import { StudentService } from '../student/student.service';
@@ -131,6 +132,38 @@ describe('TranscriptController', () => {
           user: { sub: 'lecturer-1', roles: [Role.Lecturer] as Role[] },
         }),
       ).resolves.toBeDefined();
+    });
+
+    it('should allow Student to view their own transcript', async () => {
+      mockTranscriptService.getStudentTranscript.mockResolvedValue(
+        mockTranscript,
+      );
+      mockStudentService.findByUserId.mockResolvedValue({
+        id: 'student-1',
+        userId: 'student-user-1',
+      });
+
+      const result = await controller.getStudentTranscript('student-1', {
+        user: { sub: 'student-user-1', roles: [Role.Student] as Role[] },
+      });
+
+      expect(result).toEqual(mockTranscript);
+      expect(mockStudentService.findByUserId).toHaveBeenCalledWith(
+        'student-user-1',
+      );
+    });
+
+    it('should forbid Student from viewing another transcript', async () => {
+      mockStudentService.findByUserId.mockResolvedValue({
+        id: 'student-1',
+        userId: 'student-user-1',
+      });
+
+      await expect(
+        controller.getStudentTranscript('student-2', {
+          user: { sub: 'student-user-1', roles: [Role.Student] as Role[] },
+        }),
+      ).rejects.toThrow(ForbiddenException);
     });
 
     it('should propagate service errors', async () => {

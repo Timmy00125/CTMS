@@ -1,4 +1,12 @@
-import { Controller, Get, Param, UseGuards, Request, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+  Request,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { TranscriptService } from './transcript.service';
 import { StudentService } from '../student/student.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -30,8 +38,17 @@ export class TranscriptController {
   }
 
   @Get(':studentId')
-  @Roles(Role.ExamOfficer, Role.Admin, Role.Lecturer)
-  async getStudentTranscript(@Param('studentId') studentId: string) {
+  @Roles(Role.ExamOfficer, Role.Admin, Role.Lecturer, Role.Student)
+  async getStudentTranscript(
+    @Param('studentId') studentId: string,
+    @Request() req: RequestWithUser,
+  ) {
+    if (req.user.roles.includes(Role.Student)) {
+      const student = await this.studentService.findByUserId(req.user.sub);
+      if (!student || student.id !== studentId) {
+        throw new ForbiddenException('You can only view your own transcript');
+      }
+    }
     return this.transcriptService.getStudentTranscript(studentId);
   }
 }
