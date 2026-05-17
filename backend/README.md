@@ -1,98 +1,231 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# CTMS Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS 11 backend for the CTMS (Course / Transcript Management System) project.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This service provides authentication, role-based access control, tenant-aware access rules, data ingestion, grade management, GPA/CGPA calculation, transcript retrieval, and audit logging on top of PostgreSQL via Prisma.
 
-## Description
+## Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- NestJS 11
+- Prisma ORM
+- PostgreSQL
+- JWT authentication with HTTP-only cookies
+- Argon2 password hashing
+- Jest unit and e2e tests
+- ESLint + Prettier
 
-## Project setup
+## Features
 
-```bash
-$ pnpm install
+- User registration and login
+- JWT access and refresh token flow
+- Role-based authorization for `Admin`, `Lecturer`, `ExamOfficer`, and `Student`
+- Department-scoped access checks via tenant guard
+- Bulk ingestion for students and courses
+- Grade submission, approval, publication, and amendment workflow
+- GPA and CGPA calculation endpoints
+- Transcript aggregation endpoints
+- Grade and system audit logging
+- Global error envelope and request validation
+- Rate limiting with `@nestjs/throttler`
+
+## Project Structure
+
+```text
+backend/
+├── prisma/
+│   ├── schema.prisma
+│   ├── seed.ts
+│   └── migrations/
+├── src/
+│   ├── auth/
+│   ├── audit/
+│   ├── common/
+│   ├── config/
+│   ├── course/
+│   ├── gpa/
+│   ├── grade/
+│   ├── ingestion/
+│   ├── prisma/
+│   ├── student/
+│   ├── transcript/
+│   ├── user/
+│   └── academic-session/
+└── test/
 ```
 
-## Compile and run the project
+## Prerequisites
+
+- Node.js 20+
+- pnpm
+- Docker and Docker Compose
+
+## Setup
+
+From the repository root, start PostgreSQL:
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+docker compose up -d
 ```
 
-## Run tests
+Then install backend dependencies:
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+cd backend
+pnpm install
 ```
 
-## Deployment
+## Environment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Current local configuration lives in `backend/.env`.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+```env
+DATABASE_URL="postgresql://postgres:password@localhost:5432/ctms?schema=public"
+PORT=3001
+```
+
+### Important note
+
+Keep the database port in `docker-compose.yml` and `backend/.env` aligned before running the app. If you change one, update the other.
+
+## Database
+
+Generate the Prisma client:
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+cd backend
+npx prisma generate
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Apply migrations:
 
-## Resources
+```bash
+cd backend
+npx prisma migrate dev
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Seed demo data:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+cd backend
+npx prisma db seed
+```
 
-## Support
+Open Prisma Studio:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+cd backend
+npx prisma studio
+```
 
-## Stay in touch
+## Running the App
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Development:
 
-## License
+```bash
+cd backend
+pnpm run start:dev
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Production build:
+
+```bash
+cd backend
+pnpm run build
+pnpm run start:prod
+```
+
+The API listens on `http://localhost:3001` by default.
+
+## Scripts
+
+```bash
+pnpm run build        # Build Nest app
+pnpm run start        # Start app
+pnpm run start:dev    # Start with watch mode
+pnpm run start:debug  # Start with debug + watch
+pnpm run start:prod   # Run compiled output
+pnpm run lint         # Run ESLint with fixes
+pnpm run format       # Run Prettier on src/ and test/
+pnpm run test         # Run unit tests
+pnpm run test:watch   # Run tests in watch mode
+pnpm run test:cov     # Run tests with coverage
+pnpm run test:debug   # Run tests with debugger
+pnpm run test:e2e     # Run end-to-end tests
+```
+
+## Authentication Model
+
+- Access and refresh tokens are stored in HTTP-only cookies
+- Cookie names: `access_token` and `refresh_token`
+- Access token lifetime: 15 minutes
+- Refresh token lifetime: 7 days
+- Password hashing uses Argon2
+
+## Authorization Model
+
+- `RolesGuard` enforces role-based access rules
+- `TenantGuard` restricts department-scoped resources
+- Admin users can bypass department restrictions where allowed
+- Roles are stored as an array on the `User` model
+
+## Core Domain Models
+
+Key Prisma models in `backend/prisma/schema.prisma`:
+
+- `User`
+- `Student`
+- `Course`
+- `AcademicSession`
+- `Semester`
+- `Grade`
+- `GradeAuditLog`
+- `SystemAuditLog`
+
+Important grade rule:
+
+- `GradeStatus` values are `DRAFT`, `PENDING_APPROVAL`, and `PUBLISHED`
+- Grades are unique per `studentId + courseId + semesterId`
+
+## Tests
+
+Unit tests are colocated in `src/**/*.spec.ts`.
+
+End-to-end tests live in `backend/test/` and cover flows including:
+
+- auth
+- ingestion
+- grade workflow
+- GPA
+- transcript retrieval
+- throttling
+- permissions and guards
+- global exception behavior
+
+Run all unit tests:
+
+```bash
+cd backend
+pnpm run test
+```
+
+Run e2e tests:
+
+```bash
+cd backend
+pnpm run test:e2e
+```
+
+## Development Notes
+
+- TypeScript is configured with `module: "nodenext"`
+- ESLint uses flat config via `backend/eslint.config.mjs`
+- Prettier rules are defined in `backend/.prettierrc`
+- Request validation is enabled globally with `ValidationPipe`
+- Security headers are added with `helmet`
+- CORS is enabled for the frontend origin
+
+## Related Packages
+
+- Frontend app: `../frontend`
+- Root task plan: `../TASKS.md`
+- Quick start notes: `../quickstart.md`
